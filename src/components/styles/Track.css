@@ -42,12 +42,12 @@
   font-size: 1rem;
 }
 .track--favorite:before {
-   content: "\2605";
+   content: "☆";
    position: absolute;
    visibility:visible;
 }
 .track--favorite:checked:before {
-  content: "\2606";
+  content: "★";
   position: absolute;
 }
 

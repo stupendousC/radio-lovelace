@@ -13,7 +13,7 @@ const Track = ({title, artist, playtime, albumart, favorite}) => {
       <input
         type="checkbox"
         className="track--favorite"
-        checked={!favorite}
+        checked={favorite}
       />
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>

@@ -37,18 +37,20 @@
 }
 
 .track--favorite {
-  visibility:hidden;
+  appearance: none;
   color: goldenrod;
   font-size: 1rem;
 }
+
+.track--favorite:focus {
+  outline: 0;
+}
+
 .track--favorite:before {
-   content: "☆";
-   position: absolute;
-   visibility:visible;
+   content: "\2605";
 }
 .track--favorite:checked:before {
-  content: "★";
-  position: absolute;
+  content: "\2606";
 }
 
 .track--control {

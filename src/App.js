@@ -7,6 +7,7 @@ import songData from './data/tracks.json';
 
 songData.forEach((song, i) => {
   song.id = i;
+  // song.favorite = false;  leave it alone??
 });
 
 class App extends Component {

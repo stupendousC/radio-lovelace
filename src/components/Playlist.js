@@ -36,6 +36,8 @@ const Playlist = (props) => {
       <Track
         key={track.id}
         {...track}
+        id={track.id}
+        favorite={track.favorite}
       />
     );
   });

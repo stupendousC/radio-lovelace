@@ -5,7 +5,14 @@ import "./styles/Track.css";
 
 // Here we use destructuring to extract the props into separate variables
 // See https://wesbos.com/destructuring-objects/
-const Track = ({title, artist, playtime, albumart, favorite}) => {
+const Track = ({id, title, artist, playtime, albumart, favorite}) => {
+
+  const toggleFav = (event) => {
+    console.log(`u clicked on ${title} id=${id} favorite=${favorite}`);
+    
+    // call parentCB and send back to playlist?
+  }
+
   return (
     <li className="track">
       <img className="track--albumart" alt={`album art for ${title}`} src={albumart} />
@@ -14,6 +21,8 @@ const Track = ({title, artist, playtime, albumart, favorite}) => {
         type="checkbox"
         className="track--favorite"
         checked={favorite}
+
+        onChange={toggleFav}
       />
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>

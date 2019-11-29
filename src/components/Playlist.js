@@ -26,6 +26,13 @@ const calculatePlayTime = (tracks) => {
 }
 
 const Playlist = (props) => {
+  const playlistCB = (id, favorite) => {
+    console.log(`playlistCB -> RadioSet... toggle on ${id} fav=${favorite}`);
+    
+    
+  }
+
+
   const tracks = props.tracks;
   const trackCount = tracks.length;
   const playtime = calculatePlayTime(tracks);
@@ -38,6 +45,7 @@ const Playlist = (props) => {
         {...track}
         id={track.id}
         favorite={track.favorite}
+        parentCB={playlistCB}
       />
     );
   });

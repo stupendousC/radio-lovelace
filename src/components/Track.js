@@ -5,12 +5,12 @@ import "./styles/Track.css";
 
 // Here we use destructuring to extract the props into separate variables
 // See https://wesbos.com/destructuring-objects/
-const Track = ({id, title, artist, playtime, albumart, favorite}) => {
+const Track = ({parentCB, id, title, artist, playtime, albumart, favorite}) => {
 
-  const toggleFav = (event) => {
-    console.log(`u clicked on ${title} id=${id} favorite=${favorite}`);
+  const toggleFav = () => {
+    console.log(`\nu clicked on ${title} id=${id} favorite=${favorite}`);
     
-    // call parentCB and send back to playlist?
+    parentCB(id)
   }
 
   return (

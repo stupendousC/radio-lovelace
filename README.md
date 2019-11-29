@@ -49,18 +49,21 @@ Before you start writing code, read through what's already here and make sure yo
 
 - How do the components relate to each other? Draw a diagram.
 - How does data get from `App.js` to `Track.js`?
+App + SongData.json -> Radioset() -1---2-> Playlist() -1----n-> Track()
 - There are two new pieces of syntax in this application: the "spread operator" in `Playlist.js`, and "object destructuring" in `Track.js`. What do these do?
-- `Track.js` relies on a prop called `favorite` which is not included in the JSON data. What value does this property end up taking?
+The spread operator ... lets you expand an iterable like a string, object or array into its elements.  Object destructuring via {} allows u to pull out each variable from props, so u can refer to things as attr1 or attr2 or whatever, instead of props.attr1 or props.attr2 or props.whatever
+- `Track.js` relies on a prop called `favorite` which is not included in the JSON data. What value does this property end up taking? T/F
 
 ### Wave 1: Marking Favorites
 
 When the user clicks the star icon on each track, the track should be marked as a favorite. Its star should be filled in.
 
 **Questions:**
-- How will you track whether or not a track is a favorite? Where will this state live?
-- Will you need to switch a functional component to a classical component?
+- How will you track whether or not a track is a favorite? Where will this state live? Track with state in App.js.  Toggle the fav with track.js, where it'll call its parentCB in Playlist.js, which calls its parentCB in Radioset(), which calls its parentCB in App.js, where it'll .setState() on favorite T/F
+- Will you need to switch a functional component to a classical component? ... I think I need to change Track.js to a classical component, b/c I want to be able to show the checkbox as T/F upon each click, before having to send the state all the way up to App.js...
 - What event should you listen for?
   - Hint: it's not `onClick`. Check the warning in the console.
+  I'll use onChange in the star checkbox
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
 
 ### Wave 2: Send to Top

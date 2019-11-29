@@ -14,8 +14,9 @@ class App extends Component {
 
 
 
+
   toggleFav = (id, favorite) => {
-    console.log( `App to .setState/toggle on ${id} fav = ${favorite}`);
+    console.log( `App to .setState/toggle on ${id} newFav = ${favorite}`);
 
   }
 

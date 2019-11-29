@@ -7,22 +7,23 @@ import "./styles/Track.css";
 // See https://wesbos.com/destructuring-objects/
 const Track = ({parentCB, id, title, artist, playtime, albumart, favorite}) => {
 
-  const toggleFav = () => {
-    console.log(`\nu clicked on ${title} id=${id} favorite=${favorite}`);
+  const sendNewFavUp = () => {
+    console.log(`\nu clicked on ${title} id=${id} newFavorite=${!favorite}`);
     
-    parentCB(id)
+    // send the newFav up the chain to Playlist, which will then send to Radioset, which will then send to App.js
+    parentCB(id, !favorite)
   }
 
   return (
     <li className="track">
       <img className="track--albumart" alt={`album art for ${title}`} src={albumart} />
-      <h3 className="track--title">{title}</h3>
+  <h3 className="track--title">{title} ...FAV={favorite? "t":"f"}</h3>
       <input
         type="checkbox"
         className="track--favorite"
         checked={favorite}
 
-        onChange={toggleFav}
+        onChange={sendNewFavUp}
       />
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>

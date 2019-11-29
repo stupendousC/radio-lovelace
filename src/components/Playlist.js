@@ -29,7 +29,7 @@ const Playlist = (props) => {
   const playlistCB = (id, favorite) => {
     console.log(`playlistCB -> RadioSet... toggle on ${id} fav=${favorite}`);
     
-    
+    props.parentCB(id, favorite);
   }
 
 

@@ -26,10 +26,16 @@ const calculatePlayTime = (tracks) => {
 }
 
 const Playlist = (props) => {
-  const playlistCB = (id, favorite) => {
+  const playlistCB_Fav = (id, favorite) => {
     console.log(`playlistCB -> RadioSet... toggle on ${id} newFav=${favorite}`);
     
-    props.parentCB(id, favorite);
+    props.parentCB_Fav(id, favorite);
+  }
+
+  const playlistCB_Order = (id) => {
+    console.log(`playlistCB -> RadioSet... id ${id} is NEW ORDER 1 in its playlist`);
+    // store in a tempVar, have everyone on top of it move 1 down as the curr focus bubbles up to the top spot
+    
   }
 
 
@@ -37,15 +43,14 @@ const Playlist = (props) => {
   const trackCount = tracks.length;
   const playtime = calculatePlayTime(tracks);
   const trackElements = tracks.map((track, i) => {
-    // We use "spread syntax" here to pass in all the properties of 
-    // the variable 'track' as props. Go look it up!
     return (
       <Track
         key={track.id}
         {...track}
         id={track.id}
         favorite={track.favorite}
-        parentCB={playlistCB}
+        parentCB_Fav={playlistCB_Fav}
+        parentCB_Order={playlistCB_Order}
       />
     );
   });

@@ -5,13 +5,18 @@ import "./styles/Track.css";
 
 // Here we use destructuring to extract the props into separate variables
 // See https://wesbos.com/destructuring-objects/
-const Track = ({parentCB, id, title, artist, playtime, albumart, favorite}) => {
+const Track = ({parentCB_Fav, parentCB_Order, id, title, artist, playtime, albumart, favorite}) => {
 
   const sendNewFavUp = () => {
     console.log(`\nu clicked on ${title} id=${id} newFavorite=${!favorite}`);
     
     // send the newFav up the chain to Playlist, which will then send to Radioset, which will then send to App.js
-    parentCB(id, !favorite)
+    parentCB_Fav(id, !favorite)
+  }
+
+  const sendNewOrderUp = () => {
+    console.log(`\nu clicked on ${title} id=${id} to be new ORDER1`);
+    parentCB_Order(id);
   }
 
   return (
@@ -20,15 +25,15 @@ const Track = ({parentCB, id, title, artist, playtime, albumart, favorite}) => {
   <h3 className="track--title">{title}</h3>
       <input
         type="checkbox"
-        className="track--favorite"
+        className="track-_Favorite"
         checked={favorite}
-
         onChange={sendNewFavUp}
       />
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>
       <button
         className="track--control track--to-top"
+        onClick={sendNewOrderUp}
         >
         <span role="img" aria-label="send to top">🔝</span>
       </button>

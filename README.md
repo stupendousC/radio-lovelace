@@ -77,11 +77,17 @@ A "favorite" track that is sent to the top should continue to be a favorite.
 
 **Questions:**
 - How will you keep track of the order of songs? Where will this state live?
+I will need to add a new state of Order (I don't want to risk unforeseen side effects if I were to alter ID based on Order placement) in either RadioSet.js or Playlist.js.  I CANNOT store this in App.js b/c there will be multiple playlists.
 - Will you need to switch a functional component to a classical component?
+yeah, either RadioSet.js or Playlist.js, haven't decided on which yet
 - Do you need to lift any existing state? What will happen to the code to manage this state?
+I will have to lift the state of whichever id# gets selected, up the chain from track -> wherever, and move that song to Order 0, and push everyone else affected back by 1.
 - If you do lift state, can you convert the child component back to a functional component?
+yes, unless that child component has other states it needs to keep track of
 - Is the component that maintains the state the same as the component where the event occurs? If not, how will you communicate between components?
+Not necessarily.  If the component with the state storage is not the same as the component with the event-trigger.  Then I just need to invoke the parentCallBack fcn and pass by identifying parameters back via props.
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
+
 
 
 ### Optional Enhancements

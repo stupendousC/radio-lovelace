@@ -17,11 +17,11 @@ const RadioSet = (props) => {
     props.parentCB_Fav(id, favorite);
   }
 
-  const radioSetCB_Top = (newTracksByOrder) => {
-    console.log( `RadioSet -> App... updating tracks by order, now ${newTracksByOrder[0].title} is top`);
+  // const radioSetCB_Top = (newTracksByOrder) => {
+  //   console.log( `RadioSet -> App... updating tracks by order, now ${newTracksByOrder[0].title} is top`);
     
-    // props.parentCB_Fav(id, favorite);
-  }
+  //   // props.parentCB_Fav(id, favorite);
+  // }
 
 
 
@@ -32,13 +32,13 @@ const RadioSet = (props) => {
           side="Morning"
           tracks={playlists.morningTracks}
           parentCB_Fav={radioSetCB_Fav}
-          parentCB_Top={radioSetCB_Top}
+          // parentCB_Top={radioSetCB_Top}
         />
         <Playlist
           side="Evening"
           tracks={playlists.eveningTracks}
           parentCB_Fav={radioSetCB_Fav}
-          parentCB_Top={radioSetCB_Top}
+          // parentCB_Top={radioSetCB_Top}
         />
       </section>
     </div>

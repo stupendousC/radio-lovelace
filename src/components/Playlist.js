@@ -32,8 +32,8 @@ class Playlist extends React.Component {
     this.state = {
       side: props.side,
       tracks: props.tracks,
-      parentCB_Fav: props.parentCB_Fav,
-      parentCB_Top: props.parentCB_Top,
+      // parentCB_Fav: props.parentCB_Fav,
+      // parentCB_Top: props.parentCB_Top,
     }
   }
 
@@ -74,7 +74,7 @@ class Playlist extends React.Component {
     console.log(newTracksByOrder[3]);
 
     // ??? send entire playlist backup to App with their updated order params.
-    this.state.parentCB_Top(newTracksByOrder);
+    // this.state.parentCB_Top(newTracksByOrder);
   }
 
 
@@ -85,7 +85,7 @@ class Playlist extends React.Component {
     const trackElements = tracks.map((track, i) => {
       return (
         <Track
-          key={track.order} // changed from track.id
+          key={track.id} // changed from track.id
           {...track}
           id={track.id}
           favorite={track.favorite}

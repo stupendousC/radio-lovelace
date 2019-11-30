@@ -7,7 +7,8 @@ import songData from './data/tracks.json';
 
 songData.forEach((song, i) => {
   song.id = i;
-  song.favorite = false;  //leave it alone??
+  song.favorite = false;
+  song.order = i;
 });
 
 class App extends Component {

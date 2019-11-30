@@ -25,47 +25,88 @@ const calculatePlayTime = (tracks) => {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-const Playlist = (props) => {
-  const playlistCB_Fav = (id, favorite) => {
+class Playlist extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      side: props.side,
+      tracks: props.tracks,
+      parentCB_Fav: props.parentCB_Fav,
+      parentCB_Top: props.parentCB_Top,
+    }
+  }
+
+  playlistCB_Fav = (id, favorite) => {
     console.log(`playlistCB -> RadioSet... toggle on ${id} newFav=${favorite}`);
     
-    props.parentCB_Fav(id, favorite);
+    this.state.parentCB_Fav(id, favorite);
   }
 
-  const playlistCB_Order = (id) => {
-    console.log(`playlistCB -> RadioSet... id ${id} is NEW ORDER 1 in its playlist`);
-    // store in a tempVar, have everyone on top of it move 1 down as the curr focus bubbles up to the top spot
+  playlistCB_Order = (id, order) => {
+    console.log(`playlistCB -> RadioSet... id ${id} was order ${order} promoted to ORDER 0 in ${this.state.side} playlist`);
     
+    // first locate newTopTrack
+    const newTracksByOrder = this.state.tracks.sort(function(a,b){return a.order > b.order});
+    const newTopTrack = newTracksByOrder.find( track => track.order === order);
+    let emptySeat = newTopTrack.order;
+
+    // have everyone on top of it move 1 down as the curr focus bubbles up to the top spot
+    for (let i = newTopTrack.order-1; i >= 0; i-- ){
+      const comparingTrack = newTracksByOrder[i]
+      
+      console.log(`${comparingTrack.title} vs ${newTopTrack.title}, where order = ${comparingTrack.order} vs ${emptySeat}`);
+      comparingTrack.order = emptySeat;
+      emptySeat -= 1;
+      console.log(`empty seat = ${emptySeat}`);
+      
+      console.log(`${comparingTrack.title} is now Order${comparingTrack.order}\n\n`);
+    }
+    newTopTrack.order = 0;
+    
+    this.setState({
+      tracks: newTracksByOrder
+    })
+
+    console.log(newTracksByOrder[0]);
+    console.log(newTracksByOrder[1]);
+    console.log(newTracksByOrder[2]);
+    console.log(newTracksByOrder[3]);
+
+    // ??? send entire playlist backup to App with their updated order params.
+    this.state.parentCB_Top(newTracksByOrder);
   }
 
 
-  const tracks = props.tracks;
-  const trackCount = tracks.length;
-  const playtime = calculatePlayTime(tracks);
-  const trackElements = tracks.map((track, i) => {
-    return (
-      <Track
-        key={track.id}
-        {...track}
-        id={track.id}
-        favorite={track.favorite}
-        parentCB_Fav={playlistCB_Fav}
-        parentCB_Order={playlistCB_Order}
-      />
-    );
-  });
+  render() {
+    const tracks = this.state.tracks;
+    const trackCount = tracks.length;
+    const playtime = calculatePlayTime(tracks);
+    const trackElements = tracks.map((track, i) => {
+      return (
+        <Track
+          key={track.order} // changed from track.id
+          {...track}
+          id={track.id}
+          favorite={track.favorite}
+          parentCB_Fav={this.playlistCB_Fav}
+          parentCB_Order={this.playlistCB_Order}
+        />
+      );
+    });
 
-  return (
-    <div className="playlist">
-      <h2>{props.side} Playlist</h2>
-      <p>
-        {trackCount} tracks - {playtime}
-      </p>
-      <ul className="playlist--track-list">
-        {trackElements}
-      </ul>
-    </div>
-  );
+    return (
+      <div className="playlist">
+        <h2>{this.state.side} Playlist</h2>
+        <p>
+          {trackCount} tracks - {playtime}
+        </p>
+        <ul className="playlist--track-list">
+          {trackElements}
+        </ul>
+      </div>
+    );
+  }
 }
 
 Playlist.propTypes = {

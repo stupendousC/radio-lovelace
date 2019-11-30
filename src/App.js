@@ -56,7 +56,7 @@ class App extends Component {
         <main className="main">
           <RadioSet 
             tracks={songData} 
-            parentCB={this.toggleFav}
+            parentCB_Fav={this.toggleFav}
           />
         </main>
       </div>

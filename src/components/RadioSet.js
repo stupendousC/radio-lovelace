@@ -11,10 +11,10 @@ const RadioSet = (props) => {
     eveningTracks: props.tracks.slice(props.tracks.length / 2, props.tracks.length)
   };
 
-  const radioSetCB = (id, favorite) => {
+  const radioSetCB_Fav = (id, favorite) => {
     console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
     
-    props.parentCB(id, favorite);
+    props.parentCB_Fav(id, favorite);
   }
 
 
@@ -24,12 +24,12 @@ const RadioSet = (props) => {
         <Playlist
           side="Morning"
           tracks={playlists.morningTracks}
-          parentCB={radioSetCB}
+          parentCB_Fav={radioSetCB_Fav}
         />
         <Playlist
           side="Evening"
           tracks={playlists.eveningTracks}
-          parentCB={radioSetCB}
+          parentCB_Fav={radioSetCB_Fav}
         />
       </section>
     </div>

@@ -17,7 +17,7 @@ const Track = ({parentCB, id, title, artist, playtime, albumart, favorite}) => {
   return (
     <li className="track">
       <img className="track--albumart" alt={`album art for ${title}`} src={albumart} />
-  <h3 className="track--title">{title} ...FAV={favorite? "t":"f"}</h3>
+  <h3 className="track--title">{title}</h3>
       <input
         type="checkbox"
         className="track--favorite"

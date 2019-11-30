@@ -12,8 +12,7 @@ const RadioSet = (props) => {
   };
 
   const radioSetCB_Fav = (id, favorite) => {
-    console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
-    
+    // console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
     props.parentCB_Fav(id, favorite);
   }
 

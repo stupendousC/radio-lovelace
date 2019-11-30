@@ -49,23 +49,25 @@ Before you start writing code, read through what's already here and make sure yo
 
 - How do the components relate to each other? Draw a diagram.
 - How does data get from `App.js` to `Track.js`?
-App + SongData.json -> Radioset() -1---2-> Playlist() -1----n-> Track()
+A: App + SongData.json -> Radioset() -1---2-> Playlist() -1----n-> Track()
 - There are two new pieces of syntax in this application: the "spread operator" in `Playlist.js`, and "object destructuring" in `Track.js`. What do these do?
-The spread operator ... lets you expand an iterable like a string, object or array into its elements.  Object destructuring via {} allows u to pull out each variable from props, so u can refer to things as attr1 or attr2 or whatever, instead of props.attr1 or props.attr2 or props.whatever
-- `Track.js` relies on a prop called `favorite` which is not included in the JSON data. What value does this property end up taking? T/F
+A: The spread operator ... lets you expand an iterable like a string, object or array into its elements.  Object destructuring via {} allows u to pull out each variable from props, so u can refer to things as attr1 or attr2 or whatever, instead of props.attr1 or props.attr2 or props.whatever
+- `Track.js` relies on a prop called `favorite` which is not included in the JSON data. What value does this property end up taking? 
+A: T/F
 
 ### Wave 1: Marking Favorites
 
 When the user clicks the star icon on each track, the track should be marked as a favorite. Its star should be filled in.
 
 **Questions:**
-- How will you track whether or not a track is a favorite? Where will this state live? Track with state in App.js.  Toggle the fav with track.js, where it'll call its parentCB in Playlist.js, which calls its parentCB in Radioset(), which calls its parentCB in App.js, where it'll .setState() on favorite T/F
-- Will you need to switch a functional component to a classical component? ... am I supposed to?  I was only going to keep App.js a class component so it can store state values for all its children functional classes to refer to.  Maybe later I'll need to switch downstream functional components to classes? idk...
+- How will you track whether or not a track is a favorite? Where will this state live? A: Track with state in App.js.  Toggle the fav with track.js, where it'll call its parentCB in Playlist.js, which calls its parentCB in Radioset(), which calls its parentCB in App.js, where it'll .setState() on favorite T/F
+- Will you need to switch a functional component to a classical component? 
+A: Not at this stage.  I was only going to keep App.js a class component so it can store state values for all its children functional classes to refer to.  Maybe later I'll need to switch downstream functional components to classes? idk...
 - What event should you listen for?
   - Hint: it's not `onClick`. Check the warning in the console.
-  I'll use onChange in the star checkbox
+A: I'll use onChange in the star checkbox
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
-Rendering: app -> radioset -> playlist -> track
+A: Rendering: app -> radioset -> playlist -> track
 favToggle/callback: track -> playlist -> radioset -> app
 then re-render once .setState called, repeat Rendering step above
 
@@ -77,15 +79,16 @@ A "favorite" track that is sent to the top should continue to be a favorite.
 
 **Questions:**
 - How will you keep track of the order of songs? Where will this state live?
-I will need to add a new state of Order (I don't want to risk unforeseen side effects if I were to alter ID based on Order placement) in either RadioSet.js or Playlist.js.  I CANNOT store this in App.js b/c there will be multiple playlists.
+A: I will need to add a new state of Order (I don't want to risk unforeseen side effects if I were to alter ID based on Order placement) in Playlist.js.  I CANNOT store this in App.js or Radioset.js b/c there are multiple playlists.
 - Will you need to switch a functional component to a classical component?
-yeah, either RadioSet.js or Playlist.js, haven't decided on which yet
+A: Playlist.js
 - Do you need to lift any existing state? What will happen to the code to manage this state?
-I will have to lift the state of whichever id# gets selected, up the chain from track -> wherever, and move that song to Order 0, and push everyone else affected back by 1.
+A: I will have to lift the state of whichever id# gets selected, up the chain from Track -> Playlist, and move that song to Order 0, and push everyone else affected back by 1.
+HOLD UP!  Should I also pass the order up thru Radioset to App? otherwise every rendering might erase my Order states saved down in Playlist???
 - If you do lift state, can you convert the child component back to a functional component?
-yes, unless that child component has other states it needs to keep track of
+A: yes, unless that child component has other states it needs to keep track of.  But in this case, I could switch Playlist back to functional component?  Oh, what to do... ?!
 - Is the component that maintains the state the same as the component where the event occurs? If not, how will you communicate between components?
-Not necessarily.  If the component with the state storage is not the same as the component with the event-trigger.  Then I just need to invoke the parentCallBack fcn and pass by identifying parameters back via props.
+A: Not necessarily.  If the component with the state storage is not the same as the component with the event-trigger.  Then I just need to invoke the parentCallBack fcn and pass by identifying parameters back via props.
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
 
 

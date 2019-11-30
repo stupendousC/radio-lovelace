@@ -8,8 +8,8 @@ import "./styles/Track.css";
 const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime, albumart, favorite}) => {
 
   const sendNewFavUp = () => {
-    console.log(`\nu clicked on ${title} id=${id} newFavorite=${!favorite}`);
-    
+    // console.log(`\nu clicked on  ${title} id=${id} newFavorite=${!favorite}`);
+
     // send the newFav up the chain to Playlist, which will then send to Radioset, which will then send to App.js
     parentCB_Fav(id, !favorite)
   }

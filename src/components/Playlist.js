@@ -32,14 +32,13 @@ class Playlist extends React.Component {
     this.state = {
       side: props.side,
       tracks: props.tracks,
-      // parentCB_Fav: props.parentCB_Fav,
+      parentCB_Fav: props.parentCB_Fav,
       // parentCB_Top: props.parentCB_Top,
     }
   }
 
   playlistCB_Fav = (id, favorite) => {
-    console.log(`playlistCB -> RadioSet... toggle on ${id} newFav=${favorite}`);
-    
+    // console.log(`playlistCB -> RadioSet... toggle on ${id} newFav=${favorite}`);
     this.state.parentCB_Fav(id, favorite);
   }
 

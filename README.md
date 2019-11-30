@@ -60,11 +60,14 @@ When the user clicks the star icon on each track, the track should be marked as 
 
 **Questions:**
 - How will you track whether or not a track is a favorite? Where will this state live? Track with state in App.js.  Toggle the fav with track.js, where it'll call its parentCB in Playlist.js, which calls its parentCB in Radioset(), which calls its parentCB in App.js, where it'll .setState() on favorite T/F
-- Will you need to switch a functional component to a classical component? ... I think I need to change Track.js to a classical component, b/c I want to be able to show the checkbox as T/F upon each click, before having to send the state all the way up to App.js...
+- Will you need to switch a functional component to a classical component? ... am I supposed to?  I was only going to keep App.js a class component so it can store state values for all its children functional classes to refer to.  Maybe later I'll need to switch downstream functional components to classes? idk...
 - What event should you listen for?
   - Hint: it's not `onClick`. Check the warning in the console.
   I'll use onChange in the star checkbox
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
+Rendering: app -> radioset -> playlist -> track
+favToggle/callback: track -> playlist -> radioset -> app
+then re-render once .setState called, repeat Rendering step above
 
 ### Wave 2: Send to Top
 

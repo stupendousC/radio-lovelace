@@ -79,17 +79,18 @@ A "favorite" track that is sent to the top should continue to be a favorite.
 
 **Questions:**
 - How will you keep track of the order of songs? Where will this state live?
-A: I will need to add a new state of Order (I don't want to risk unforeseen side effects if I were to alter ID based on Order placement) in Playlist.js.  I CANNOT store this in App.js or Radioset.js b/c there are multiple playlists.
+*** A: I will need to add some indication of order (I don't want to risk unforeseen side effects if I were to alter ID based on Order placement) in Playlist.js.  I CANNOT store this in App.js or Radioset.js b/c there are multiple playlists.  So what I'm goign to do is to store in the Playlist.state the attribute of songsInOrder, where it's an array of all the song ids.  Anytime an event triggers in Track.js to move a song up, it calls its parent which is Playlist, and from the props I know which song id will need to go to index 0, so I .setState() on this new songsInOrder, afterwards everything should re-render and show my selected song on the top of the view page ***
 - Will you need to switch a functional component to a classical component?
-A: Playlist.js
+*A: Playlist.js*
 - Do you need to lift any existing state? What will happen to the code to manage this state?
-A: I will have to lift the state of whichever id# gets selected, up the chain from Track -> Playlist, and move that song to Order 0, and push everyone else affected back by 1.
-HOLD UP!  Should I also pass the order up thru Radioset to App? otherwise every rendering might erase my Order states saved down in Playlist???
+*A: I will have to lift the state of whichever id# gets selected, up the chain from Track -> Playlist, and move that song in its state of songsInOrder[] to index 0.*
+
 - If you do lift state, can you convert the child component back to a functional component?
-A: yes, unless that child component has other states it needs to keep track of.  But in this case, I could switch Playlist back to functional component?  Oh, what to do... ?!
+A: yes, unless that child component has other states it needs to keep track of. In this case, my child component is Track.js and I'm going to leave it as a functional state.
 - Is the component that maintains the state the same as the component where the event occurs? If not, how will you communicate between components?
 A: Not necessarily.  If the component with the state storage is not the same as the component with the event-trigger.  Then I just need to invoke the parentCallBack fcn and pass by identifying parameters back via props.
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
+**Track.js --trigger--> Playlist.js -> .setState(songsInOrder: newOrder) --render--> Track.js**
 
 
 

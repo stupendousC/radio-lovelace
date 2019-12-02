@@ -26,11 +26,11 @@ const RadioSet = (props) => {
           parentCB_Fav={radioSetCB_Fav}
           // parentCB_Top={radioSetCB_Top}
         />
-        <Playlist
+        {/* <Playlist
           side="Evening"
           tracks={playlists.eveningTracks}
           parentCB_Fav={radioSetCB_Fav}
-        />
+        /> */}
       </section>
     </div>
   );

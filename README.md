@@ -83,15 +83,15 @@ A "favorite" track that is sent to the top should continue to be a favorite.
 - Will you need to switch a functional component to a classical component?
 *A: Playlist.js*
 - Do you need to lift any existing state? What will happen to the code to manage this state?
-*A: I will have to lift the state of whichever id# gets selected, up the chain from Track -> Playlist, and move that song in its state of songsInOrder[] to index 0.*
+*A: I will have to lift the state of whichever id# gets selected, up the chain from Track -> Playlist, and move that song in its state of trackIdsByOrder[] to index 0.*
 
 - If you do lift state, can you convert the child component back to a functional component?
-A: yes, unless that child component has other states it needs to keep track of. In this case, my child component is Track.js and I'm going to leave it as a functional state.
+A: yes, unless that child component has other states it needs to keep track of. In this case, my child component is Track.js and it has always been a functional component.
 - Is the component that maintains the state the same as the component where the event occurs? If not, how will you communicate between components?
 A: Not necessarily.  If the component with the state storage is not the same as the component with the event-trigger.  Then I just need to invoke the parentCallBack fcn and pass by identifying parameters back via props.
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
 **Track.js --trigger--> Playlist.js -> .setState(songsInOrder: newOrder) --render--> Track.js**
-
+I found out later that if I were to delete a song from a playlist, I'd do the same thing here too, except that instead of plucking a song out of its original index and inserting in index 0 in its state.trackIdsByOrder, I'd just remove it.
 
 
 ### Optional Enhancements

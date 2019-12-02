@@ -61,14 +61,12 @@ class Playlist extends React.Component {
     const topIndex = currTrackOrder.findIndex( element => element === id );
     // topIndex CANNOT be -1, that means not found, do not erroneously put bottom track on top!
     if (topIndex === -1) {
-      console.log("FUCKED UP!");
+      console.log("NOOOOOOOOOOOOOOOO!!");
     }
     console.log(topIndex);
     
-    // use splice() to remove this Top track from its index position, for 1 item only
+    // pluck out topTrack from whence it came, and put it in index 0
     const topTrack = currTrackOrder.splice(topIndex, 1);
-
-    // put this topTrack back into the currTrackOrder at index 0
     currTrackOrder.unshift(topTrack);
 
     this.setState({
@@ -82,19 +80,31 @@ class Playlist extends React.Component {
   render() {
     const tracks = this.state.tracks;
 
-    // here we want to pass an array of tracks that are in order per .state.trackIdsByOrder, instead of just the default ids
+
+    // for (let track of tracks) {
+    //   console.log(track);\
+    // }
+
+    // here we want tracks to appear in order per .state.trackIdsByOrder, instead of just the default ids
     const tracksInOrder = this.state.trackIdsByOrder.map ((id) => {
-      return (tracks.find( track => track.id === id ))
+      console.log(`looking for ${id}`);
+      
+      const match = tracks.find ( track => track.id === id );
+      console.log(`matched to ${match.title}`);
+      
+      return match;
     });
 
+    console.log(`TOP TRACK = ${tracksInOrder[0].title}`);
     
+
     const trackCount = tracks.length;
     const playtime = calculatePlayTime(tracks);
 
     const trackElements = tracksInOrder.map((track, i) => {
       return (
         <Track
-          key={track.id} 
+          key={i} 
           {...track}
           id={track.id}
           favorite={track.favorite}

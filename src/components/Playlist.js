@@ -32,8 +32,8 @@ class Playlist extends React.Component {
     this.state = {
       side: props.side,
       tracks: props.tracks,
+      trackIdsByOrder: this.defaultTrackIdsByOrder(props),
       parentCB_Fav: props.parentCB_Fav,
-      // parentCB_Top: props.parentCB_Top,
     }
   }
 
@@ -42,49 +42,59 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  playlistCB_Order = (id, order) => {
-    console.log(`playlistCB -> RadioSet... id ${id} was order ${order} promoted to ORDER 0 in ${this.state.side} playlist`);
-    
-    // first locate newTopTrack
-    const newTracksByOrder = this.state.tracks.sort(function(a,b){return a.order > b.order});
-    const newTopTrack = newTracksByOrder.find( track => track.order === order);
-    let emptySeat = newTopTrack.order;
+  // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
+  // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.
+  defaultTrackIdsByOrder = (props) => { 
+    // for some reason... props.track.sort(); <- would also work, it automatically knows to sort by asc id...
+    const tracksObjsByOrder = props.tracks.sort((a,b) => { return (parseInt(a.id) - parseInt(b.id)) });
+    return tracksObjsByOrder.map( track => { return track.id }); 
+  }
 
-    // have everyone on top of it move 1 down as the curr focus bubbles up to the top spot
-    for (let i = newTopTrack.order-1; i >= 0; i-- ){
-      const comparingTrack = newTracksByOrder[i]
-      
-      console.log(`${comparingTrack.title} vs ${newTopTrack.title}, where order = ${comparingTrack.order} vs ${emptySeat}`);
-      comparingTrack.order = emptySeat;
-      emptySeat -= 1;
-      console.log(`empty seat = ${emptySeat}`);
-      
-      console.log(`${comparingTrack.title} is now Order${comparingTrack.order}\n\n`);
+  // this is what gets the event trigger in Track.js will invoke, which will make the selected song
+  // go to index 0 of state.trackIdsByOrder
+  playlistCB_Order = (id) => {
+    const currTrackOrder = this.state.trackIdsByOrder;
+    console.log(`playlistCB: id ${id} promoted to index 0 in ${this.state.side} playlist`);
+    console.log(`current order by Id is ${currTrackOrder}`);
+    
+    // get index of the new Top track
+    const topIndex = currTrackOrder.findIndex( element => element === id );
+    // topIndex CANNOT be -1, that means not found, do not erroneously put bottom track on top!
+    if (topIndex === -1) {
+      console.log("FUCKED UP!");
     }
-    newTopTrack.order = 0;
+    console.log(topIndex);
     
+    // use splice() to remove this Top track from its index position, for 1 item only
+    const topTrack = currTrackOrder.splice(topIndex, 1);
+
+    // put this topTrack back into the currTrackOrder at index 0
+    currTrackOrder.unshift(topTrack);
+
     this.setState({
-      tracks: newTracksByOrder
+      trackIdsByOrder: currTrackOrder,
     })
-
-    console.log(newTracksByOrder[0]);
-    console.log(newTracksByOrder[1]);
-    console.log(newTracksByOrder[2]);
-    console.log(newTracksByOrder[3]);
-
-    // ??? send entire playlist backup to App with their updated order params.
-    // this.state.parentCB_Top(newTracksByOrder);
+    
+    console.log(`new ORDER = ${this.state.trackIdsByOrder}`);
   }
 
 
   render() {
     const tracks = this.state.tracks;
+
+    // here we want to pass an array of tracks that are in order per .state.trackIdsByOrder, instead of just the default ids
+    const tracksInOrder = this.state.trackIdsByOrder.map ((id) => {
+      return (tracks.find( track => track.id === id ))
+    });
+
+    
     const trackCount = tracks.length;
     const playtime = calculatePlayTime(tracks);
-    const trackElements = tracks.map((track, i) => {
+
+    const trackElements = tracksInOrder.map((track, i) => {
       return (
         <Track
-          key={track.id} // changed from track.id
+          key={track.id} 
           {...track}
           id={track.id}
           favorite={track.favorite}

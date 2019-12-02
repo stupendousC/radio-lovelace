@@ -15,8 +15,8 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
   }
 
   const sendNewOrderUp = () => {
-    console.log(`\nu clicked on ${title} id=${id}, ORDER: ${order}->0`);
-    parentCB_Order(id, order);
+    console.log(`\nu clicked on ${title} id=${id} <- new TOP SONG`);
+    parentCB_Order(id);
   }
 
   return (

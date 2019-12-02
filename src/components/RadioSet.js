@@ -16,13 +16,6 @@ const RadioSet = (props) => {
     props.parentCB_Fav(id, favorite);
   }
 
-  // const radioSetCB_Top = (newTracksByOrder) => {
-  //   console.log( `RadioSet -> App... updating tracks by order, now ${newTracksByOrder[0].title} is top`);
-    
-  //   // props.parentCB_Fav(id, favorite);
-  // }
-
-
 
   return (
     <div className="radio-set">
@@ -37,7 +30,6 @@ const RadioSet = (props) => {
           side="Evening"
           tracks={playlists.eveningTracks}
           parentCB_Fav={radioSetCB_Fav}
-          // parentCB_Top={radioSetCB_Top}
         />
       </section>
     </div>

@@ -32,17 +32,19 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>
 
+
+
       <button
         className="track--control track--up-1"
         // onClick={moveUp1}
         >
-        <span>👆</span>
+        <span role="img" aria-label="point up">👆</span>
       </button>
       <button
         className="track--control track--down-1"
         // onClick={moveDown1}
         >
-        <span>👇</span>
+        <span role="img" aria-label="point down">👇</span>
       </button>
 
 

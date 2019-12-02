@@ -8,7 +8,6 @@ import songData from './data/tracks.json';
 songData.forEach((song, i) => {
   song.id = i;
   song.favorite = false;
-  song.order = i;
 });
 
 class App extends Component {
@@ -21,7 +20,7 @@ class App extends Component {
   }
 
   toggleFav = (id, favorite) => {
-    console.log( `App to .setState/toggle on ${id} newFav = ${favorite}`);
+    // console.log( `App to .setState/toggle on ${id} newFav = ${favorite}`);
 
     // iter over songData, find matching id and change its newFav value
     const newSongData = this.state.songData;

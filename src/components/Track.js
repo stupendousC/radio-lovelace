@@ -5,7 +5,7 @@ import "./styles/Track.css";
 
 // Here we use destructuring to extract the props into separate variables
 // See https://wesbos.com/destructuring-objects/
-const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime, albumart, favorite}) => {
+const Track = ({parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id, title, artist, playtime, albumart, favorite}) => {
 
   const sendNewFavUp = () => {
     // console.log(`\nu clicked on  ${title} id=${id} newFavorite=${!favorite}`);
@@ -15,8 +15,13 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
   }
 
   const sendNewOrderUp = () => {
-    console.log(`\nEVENT TRIGGERED: New Top song = ${title} id=${id}`);
+    // console.log(`\nEVENT TRIGGERED: New Top song = ${title} id=${id}`);
     parentCB_Order(id);
+  }
+
+  const switchList = () => {
+    console.log(`\nEVENT TRIGGERED: song ${title} is switching from ${playlistName} list`);
+    parentCB_Switch(id, playlistName);
   }
 
   return (
@@ -58,8 +63,8 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
       </button>
       <button
         className="track--control track--switch"
+        onClick={switchList}
         >
-        {/* onClick={} */}
         <span role="img" aria-label="switch lists">↔</span>
       </button>
     </li>

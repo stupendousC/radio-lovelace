@@ -34,6 +34,7 @@ class Playlist extends React.Component {
       tracks: props.tracks,
       trackIdsByOrder: this.defaultTrackIdsByOrder(props),
       parentCB_Fav: props.parentCB_Fav,
+      parentCB_Switch: props.parentCB_Switch,
     }
   }
 
@@ -42,17 +43,19 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
-  // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.
+  
   defaultTrackIdsByOrder = (props) => { 
+    // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
+    // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.
+    
     // for some reason... props.track.sort(); <- would also work, it automatically knows to sort by asc id...
     const tracksObjsByOrder = props.tracks.sort((a,b) => { return (parseInt(a.id) - parseInt(b.id)) });
     return tracksObjsByOrder.map( track => { return track.id }); 
   }
-
-  // this is what gets the event trigger in Track.js will invoke, which will make the selected song
-  // go to index 0 of state.trackIdsByOrder
+  
   playlistCB_Order = (id) => {
+  // the event trigger in Track.js will invoke this, which will move the selected song to index 0 of state.trackIdsByOrder
+
     const currTrackOrder = this.state.trackIdsByOrder;
     console.log(`playlistCB: song id ${id} is now top in ${this.state.side} playlist's state.trackIdsByOrder`);
     // console.log(`current order by Id is ${currTrackOrder}`);
@@ -73,6 +76,11 @@ class Playlist extends React.Component {
     // console.log(`new ORDER = ${this.state.trackIdsByOrder}`);
   }
 
+  playlistCB_Switch = (id, playlistName) => {
+    console.log(`passing it back up to Radioset! ${id} & ${playlistName}`);
+    this.state.parentCB_Switch(id, playlistName);
+  }
+
 
   render() {
     const tracks = this.state.tracks;
@@ -88,6 +96,7 @@ class Playlist extends React.Component {
 
     const trackCount = tracks.length;
     const playtime = calculatePlayTime(tracks);
+    const side = this.state.side
 
     const trackElements = tracksInOrder.map((track, i) => {
       return (
@@ -98,6 +107,8 @@ class Playlist extends React.Component {
           favorite={track.favorite}
           parentCB_Fav={this.playlistCB_Fav}
           parentCB_Order={this.playlistCB_Order}
+          parentCB_Switch={this.playlistCB_Switch}
+          playlistName={side}
         />
       );
     });

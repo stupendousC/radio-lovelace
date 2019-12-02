@@ -12,8 +12,14 @@ const RadioSet = (props) => {
   };
 
   const radioSetCB_Fav = (id, favorite) => {
-    // console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
+    console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
+    
     props.parentCB_Fav(id, favorite);
+  }
+
+  const radioSetCB_Switch = (id, playlistName) => {
+    console.log(`Radioset has received info: ${id} & ${[playlistName]}`);
+    
   }
 
 
@@ -24,12 +30,13 @@ const RadioSet = (props) => {
           side="Morning"
           tracks={playlists.morningTracks}
           parentCB_Fav={radioSetCB_Fav}
-          // parentCB_Top={radioSetCB_Top}
+          parentCB_Switch={radioSetCB_Switch}
         />
         <Playlist
           side="Evening"
           tracks={playlists.eveningTracks}
           parentCB_Fav={radioSetCB_Fav}
+          parentCB_Switch={radioSetCB_Switch}
         />
       </section>
     </div>

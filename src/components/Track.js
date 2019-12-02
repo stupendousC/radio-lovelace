@@ -36,13 +36,13 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
         className="track--control track--up-1"
         // onClick={moveUp1}
         >
-        <span role="img" aria-label="thumbsUp">🔝</span>
+        <span>👆</span>
       </button>
       <button
         className="track--control track--down-1"
         // onClick={moveDown1}
         >
-        <span role="img" aria-label="thumbsDown">🔝</span>
+        <span>👇</span>
       </button>
 
 

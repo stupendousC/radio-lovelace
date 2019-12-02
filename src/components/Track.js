@@ -1,7 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-
+import PropTypes from 'prop-types';
+import React from 'react';
 import "./styles/Track.css";
+
 
 // Here we use destructuring to extract the props into separate variables
 // See https://wesbos.com/destructuring-objects/
@@ -31,6 +31,23 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
       />
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>
+
+      <button
+        className="track--control track--up-1"
+        // onClick={moveUp1}
+        >
+        <span role="img" aria-label="thumbsUp">🔝</span>
+      </button>
+      <button
+        className="track--control track--down-1"
+        // onClick={moveDown1}
+        >
+        <span role="img" aria-label="thumbsDown">🔝</span>
+      </button>
+
+
+
+
       <button
         className="track--control track--to-top"
         onClick={sendNewOrderUp}
@@ -40,6 +57,7 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
       <button
         className="track--control track--switch"
         >
+        {/* onClick={} */}
         <span role="img" aria-label="switch lists">↔</span>
       </button>
     </li>

@@ -1,6 +1,6 @@
 .track {
   display: grid;
-  grid-template: 1fr 1fr / 6rem 4rem auto 4rem 3rem;
+  grid-template: 1fr 1fr / 6rem 4rem auto 4rem 3rem 3rem;
   grid-template-areas: "track--albumart track--title track--title track--title track--to-top" "track--albumart track--favorite track--artist track--playtime track--switch";
   align-items: center;
 

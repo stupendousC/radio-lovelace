@@ -25,7 +25,7 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
       <h3 className="track--title">{title}</h3>
       <input
         type="checkbox"
-        className="track-_Favorite"
+        className="track--favorite"
         checked={favorite}
         onChange={sendNewFavUp}
       />

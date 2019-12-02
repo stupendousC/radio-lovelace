@@ -38,7 +38,7 @@
 
 .track--favorite {
   appearance: none;
-  color: goldenrod;
+  color: red;
   font-size: 1rem;
 }
 
@@ -46,10 +46,8 @@
   outline: 0;
 }
 
-
-/* Are these 2 backward?? switching the 2606/2605 values for now */
 .track--favorite:before {
-   content: "\2606";
+  content: "\2606";
 }
 .track--favorite:checked:before {
   content: "\2605";

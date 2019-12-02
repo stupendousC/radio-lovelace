@@ -54,16 +54,13 @@ class Playlist extends React.Component {
   // go to index 0 of state.trackIdsByOrder
   playlistCB_Order = (id) => {
     const currTrackOrder = this.state.trackIdsByOrder;
-    console.log(`playlistCB: id ${id} promoted to index 0 in ${this.state.side} playlist`);
-    console.log(`current order by Id is ${currTrackOrder}`);
+    console.log(`playlistCB: song id ${id} is now top in ${this.state.side} playlist's state.trackIdsByOrder`);
+    // console.log(`current order by Id is ${currTrackOrder}`);
     
     // get index of the new Top track
-    const topIndex = currTrackOrder.findIndex( element => element === id );
+    const topIndex = currTrackOrder.findIndex( element => parseInt(element) === parseInt(id) );
+    // super important to leave parseInt() in there, otherwise clicking on something again will give index -1!!!
     // topIndex CANNOT be -1, that means not found, do not erroneously put bottom track on top!
-    if (topIndex === -1) {
-      console.log("NOOOOOOOOOOOOOOOO!!");
-    }
-    console.log(topIndex);
     
     // pluck out topTrack from whence it came, and put it in index 0
     const topTrack = currTrackOrder.splice(topIndex, 1);
@@ -73,30 +70,21 @@ class Playlist extends React.Component {
       trackIdsByOrder: currTrackOrder,
     })
     
-    console.log(`new ORDER = ${this.state.trackIdsByOrder}`);
+    // console.log(`new ORDER = ${this.state.trackIdsByOrder}`);
   }
 
 
   render() {
     const tracks = this.state.tracks;
 
-
-    // for (let track of tracks) {
-    //   console.log(track);\
-    // }
-
     // here we want tracks to appear in order per .state.trackIdsByOrder, instead of just the default ids
     const tracksInOrder = this.state.trackIdsByOrder.map ((id) => {
-      console.log(`looking for ${id}`);
-      
-      const match = tracks.find ( track => track.id === id );
-      console.log(`matched to ${match.title}`);
-      
+      // super import to leave the parseInt() in there, otherwise it won't work!!!
+      const match = tracks.find ( track => parseInt(track.id) === parseInt(id) );
       return match;
     });
 
-    console.log(`TOP TRACK = ${tracksInOrder[0].title}`);
-    
+    // console.log(`TOP TRACK = ${tracksInOrder[0].title}`);
 
     const trackCount = tracks.length;
     const playtime = calculatePlayTime(tracks);

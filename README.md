@@ -79,6 +79,7 @@ A "favorite" track that is sent to the top should continue to be a favorite.
 
 **Questions:**
 - How will you keep track of the order of songs? Where will this state live?
+
 *** A: I will need to add some indication of order (I don't want to risk unforeseen side effects if I were to alter ID based on Order placement) in Playlist.js.  I CANNOT store this in App.js or Radioset.js b/c there are multiple playlists.  So what I'm goign to do is to store in the Playlist.state the attribute of songsInOrder, where it's an array of all the song ids.  Anytime an event triggers in Track.js to move a song up, it calls its parent which is Playlist, and from the props I know which song id will need to go to index 0, so I .setState() on this new songsInOrder, afterwards everything should re-render and show my selected song on the top of the view page ***
 - Will you need to switch a functional component to a classical component?
 *A: Playlist.js*

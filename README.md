@@ -106,11 +106,17 @@ A "favorite" track that switches lists should continue to be a favorite.
 
 **Questions:** (same as for wave 2)
 - How will you keep track of which song belongs in which playlist? Where will this state live?
+**To do this, I will make RadioSet a class component too. Where it will have a state of the songs in each set??? there will be a .state.morningList and a .state.eveningList and for the future whatever .state.whateverList that may come up**
 - Will you need to switch a functional component to a classical component?
-- Do you need to lift any existing state? What will happen to the code to manage this state?
+**I'm going to make RadioSet a class component too**
+- Do you need to lift any existing state? What will happen to the code to manage this state? **Yes I will need to lift the song id from the track.js, up to playlist.js, up to radioset.js, where it will pluck the selected song id from the set it belongs to and put it in the other one**
 - If you do lift state, can you convert the child component back to a functional component?
+**Yes, but not in this case because I want to keep the song order info in the Playlist class component, because the same song may appear in both playlists, and they cannot share the same order info in Radioset nor App.js**
 - Is the component that maintains the state the same as the component where the event occurs? If not, how will you communicate between components?
+**Not in this case.  The trigger lives in Track.js, whereas the state storage is in Radioset.js, so I will have to pass the song id info and the set it came from, up the chain to Radioset via props and parental callback fcns**
 - Draw a diagram of the flow of rendering and callbacks in your app so far, similar to the one we drew in class.
+**Tracks.js --trigger--> Playlist.js --> Radioset.js, where it .setState, then re-render back down the chain**
+
 
 **Other Enhancements:**
 

@@ -19,8 +19,8 @@ class App extends Component {
     }
   }
 
-  toggleFav = (id, favorite) => {
-    // console.log( `App to .setState/toggle on ${id} newFav = ${favorite}`);
+  toggleFav = (id) => {
+    // console.log( `App to .setState/toggle Fav on ${id});
 
     // iter over songData, find matching id and change its newFav value
     const newSongData = this.state.songData;
@@ -47,12 +47,25 @@ class App extends Component {
     // })
   }
 
+  makeNewPlaylist = (event) => {
+    console.log(`Making new playlist called ${event.target}`);
+    // TODO
+  }
+
   render() {
     return (
       <div className="App">
         <header>
           <h1 className="page-header--title">Radio Lovelace</h1>
         </header>
+
+        <fieldset>
+          <legend><h3>Add a new playlist</h3></legend>
+          <input type="text" placeholder="LINK BUTTON TO THIS TEXT SOMEHOW!!!!" className="TODO"></input>
+          <button type="submit" onClick={this.makeNewPlaylist}>Let's rock!</button>
+        </fieldset>
+        
+
         <main className="main">
           <RadioSet 
             tracks={songData} 

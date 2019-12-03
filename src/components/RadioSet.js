@@ -12,6 +12,10 @@ export default class RadioSet extends React.Component {
     }
   }
 
+  genDefaultPlaylists = () => {
+    // TODO: split the tracks into 2 playlists such that the playtimes are ~equal.  Big O = ?
+  }
+
   radioSetCB_Fav = (id, favorite) => {
     console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
     
@@ -21,6 +25,10 @@ export default class RadioSet extends React.Component {
   radioSetCB_Switch = (id, playlistName) => {
     console.log(`Radioset has received info: ${id} & ${[playlistName]}`);
     
+  }
+
+  addNewPlaylist = () => {
+    // TODO: trickle down from app.js, also need a button there.
   }
 
   render() {

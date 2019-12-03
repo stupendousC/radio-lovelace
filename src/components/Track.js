@@ -24,6 +24,16 @@ const Track = ({parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id,
     parentCB_Switch(id, playlistName);
   }
 
+  const moveUp1 = () => {
+    console.log(`\nEVENT TRIGGERED: Move up by 1 spot: ${title} id=${id}`);
+    // TODO!
+  }
+
+  const moveDown1 = () => {
+    console.log(`\nEVENT TRIGGERED: Move down by 1 spot: ${title} id=${id}`);
+    // TODO!
+  }
+
   return (
     <li className="track">
       <img className="track--albumart" alt={`album art for ${title}`} src={albumart} />
@@ -37,23 +47,18 @@ const Track = ({parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id,
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>
 
-
-
       <button
         className="track--control track--up-1"
-        // onClick={moveUp1}
+        onClick={moveUp1}
         >
         <span role="img" aria-label="point up">👆</span>
       </button>
       <button
         className="track--control track--down-1"
-        // onClick={moveDown1}
+        onClick={moveDown1}
         >
         <span role="img" aria-label="point down">👇</span>
       </button>
-
-
-
 
       <button
         className="track--control track--to-top"

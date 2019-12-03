@@ -77,7 +77,7 @@ class Playlist extends React.Component {
   }
 
   playlistCB_Switch = (id, playlistName) => {
-    console.log(`passing it back up to Radioset! ${id} & ${playlistName}`);
+    // console.log(`passing it back up to Radioset! ${id} & ${playlistName}`);
     this.state.parentCB_Switch(id, playlistName);
   }
 

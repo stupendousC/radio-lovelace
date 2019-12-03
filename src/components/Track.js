@@ -20,7 +20,7 @@ const Track = ({parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id,
   }
 
   const switchList = () => {
-    console.log(`\nEVENT TRIGGERED: song ${title} is switching from ${playlistName} list`);
+    // console.log(`\nEVENT TRIGGERED: song ${title} is switching from ${playlistName} list`);
     parentCB_Switch(id, playlistName);
   }
 
@@ -53,7 +53,7 @@ const Track = ({parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id,
         >
         <span role="img" aria-label="point up">👆</span>
       </button>
-      
+
       <button
         className="track--control track--down-1"
         onClick={moveDown1}

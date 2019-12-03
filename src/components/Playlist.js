@@ -32,7 +32,8 @@ class Playlist extends React.Component {
     this.state = {
       side: props.side,
       tracks: props.tracks,
-      trackIdsByOrder: this.defaultTrackIdsByOrder(props),
+      trackIdsByOrder: this.genTrackIdsByOrder(props),
+      // trackIdsByOrder: this.defaultTrackIdsByOrder(props),
       parentCB_Fav: props.parentCB_Fav,
       parentCB_Switch: props.parentCB_Switch,
     }
@@ -43,7 +44,17 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  
+  // NEED TO MAKE SURE THIS WORKS!!!!
+  genTrackIdsByOrder = (props) => {
+    if (props.playlistToSetTopOrder) {
+      console.log(`Playlist will send id:${props.playlistToSetTopOrder} to the TOP`);
+      return this.playlistCB_Order(props.playlistToSetTopOrder);
+
+    } else {
+      return this.defaultTrackIdsByOrder(props);
+    }
+  }
+
   defaultTrackIdsByOrder = (props) => { 
     // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
     // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.

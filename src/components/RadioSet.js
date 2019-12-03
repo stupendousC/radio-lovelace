@@ -1,7 +1,6 @@
 import React from 'react';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
-import {Capitalize} from './Helpers';
 
 export default class RadioSet extends React.Component {
   constructor(props) {
@@ -11,12 +10,17 @@ export default class RadioSet extends React.Component {
         morning: props.tracks.slice(0, props.tracks.length / 2),
         evening: props.tracks.slice(props.tracks.length / 2, props.tracks.length),
       },
+      playlistToSetTopOrder: null,
       parentCB_Fav: props.parentCB_Fav
     }
   }
 
-  genDefaultPlaylists = () => {
+  genDefaultPlaylists = (props) => {
+    // FOR SOME REASON THIS DOESN'T WORK!!!!!!!!
     // TODO: split the tracks into 2 playlists such that the playtimes are ~equal.  Big O = ?
+    const first = props.tracks.slice(0, props.tracks.length / 2);
+    const second = props.tracks.slice(props.tracks.length / 2, props.tracks.length);
+    return [first, second];
   }
 
   radioSetCB_Fav = (id, favorite) => {
@@ -37,48 +41,48 @@ export default class RadioSet extends React.Component {
     const allPlaylistEntries = Object.entries(this.state.playlists);
 
     for (let i=0; i<allPlaylistEntries.length; i++) {
-      const name = allPlaylistEntries[i][0];
-      const tracks = allPlaylistEntries[i][1];
+      // For currPair & prevPair, index 0 = :name of the state.playlist, index 1 = [tracks]
+      const currPair = allPlaylistEntries[i];
+
+      const name = currPair[0];
+      const tracks = currPair[1];
       if (playlistName === name) {
         oldTracksName = name;  
         oldTracks = tracks;
         
-        if (i == allPlaylistEntries.length-1) {
-          newTracksName = allPlaylistEntries[0][0]; 
-          newTracks = allPlaylistEntries[1][0]; 
+        let prevPair;
+        if (i === allPlaylistEntries.length-1) {
+          // if oldTracks happened to be the last of the state.playlists,
+          // will need to loop around to start of the array get the newTracks
+          prevPair = allPlaylistEntries[0];
         } else {
-          newTracksName = allPlaylistEntries[0][i+1]; 
-          newTracks = allPlaylistEntries[1][0];
+          prevPair = allPlaylistEntries[i+1];
         }
+        newTracksName = prevPair[0]; 
+        newTracks = prevPair[1];
+        
         break; 
       }
     }
-
-
     
-/// WRONG!!!
-    // for (let name of Object.keys(this.state.playlists)) {
-    //   if (playlistName === name){ oldTracks = this.state.playlists.{WRONG!}; }
-    // }
-
-    // find song in oldTracks, remove & .setState()
+    // remove song from oldTracks, set aside, .setState()
+    let song;
     for (let i=0; i<oldTracks.length; i++) {
       if (oldTracks[i].id === id) {
-        oldTracks.splice(i, 1);
+        song = oldTracks.splice(i, 1)[0];
         break;
       }
     }
 
-    // setState() on the updated oldTracks inventory
-    console.log('NEED TO SET STATE ON THIS UPDATED OLDTRACKS LIST!!!!!');
-    
-    console.log(oldTracks);
-
     // send song to new playlist here in state
-    
-    // as part of render to Playlist, make the switched song the top of Playlist.state.trackIdsByOrder
-    // trackIdsByOrder needs to be sent as props so Playlist knows to use our specs instead of their default fcn
+    newTracks.unshift(song);
+    this.setState({ playlistToSetTopOrder: song.id })
+    // send as props: tell them to use Playlist.playlistCB_Order(id) on our song!!!
+  
+    // setState() on the both oldTracks & newTracks
+    console.log('NEED TO SET STATE!!!!!');
   }
+
 
   addNewPlaylist = () => {
     // TODO: trickle down from app.js, also need a button there.
@@ -95,12 +99,17 @@ export default class RadioSet extends React.Component {
             tracks={this.state.playlists.morning}
             parentCB_Fav={this.radioSetCB_Fav}
             parentCB_Switch={this.radioSetCB_Switch}
+            // needs to go with the CORRECT playlistname!!!
+            playlistToSetTopOrder={this.state.playlistToSetTopOrder}
           />
           <Playlist
             side="Evening"
             tracks={this.state.playlists.evening}
             parentCB_Fav={this.radioSetCB_Fav}
             parentCB_Switch={this.radioSetCB_Switch}
+                        // needs to go with the CORRECT playlistname!!!
+
+            playlistToSetTopOrder={this.state.playlistToSetTopOrder}
           />
         </section>
       </div>

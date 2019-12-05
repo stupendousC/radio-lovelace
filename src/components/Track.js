@@ -25,12 +25,12 @@ const Track = ({parentCB_UpDown, parentCB_Switch, playlistName, parentCB_Fav, pa
   }
 
   const moveUp1 = () => {
-    console.log(`\nEVENT TRIGGERED: Move up by 1 spot: ${title} id=${id}`);
+    // console.log(`\nEVENT TRIGGERED: Move up by 1 spot: ${title} id=${id}`);
     parentCB_UpDown(id, 1);
   }
 
   const moveDown1 = () => {
-    console.log(`\nEVENT TRIGGERED: Move down by 1 spot: ${title} id=${id}`);
+    // console.log(`\nEVENT TRIGGERED: Move down by 1 spot: ${title} id=${id}`);
     parentCB_UpDown(id, -1);
   }
 

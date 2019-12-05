@@ -58,7 +58,7 @@ export default class RadioSet extends React.Component {
   }
 
   radioSetCB_Fav = (id, favorite) => {
-    console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
+    // console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
     this.state.parentCB_Fav(id, favorite);
   }
 

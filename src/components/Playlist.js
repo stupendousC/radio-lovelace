@@ -28,7 +28,7 @@ class Playlist extends React.Component {
   // NEED TO MAKE SURE THIS WORKS!!!!  DRY it via Radioset render returns!!
   genTrackIdsByOrder = (props) => {
     if (props.topOrderPlaylist === props.side) {
-      console.log(`Playlist will send id:${props.topOrder} to the TOP`);
+      // console.log(`Playlist will send id:${props.topOrder} to the TOP`);
       return this.playlistCB_Order(props.topOrder);
 
     } else {
@@ -49,7 +49,7 @@ class Playlist extends React.Component {
   // the event trigger in Track.js will invoke this, which will move the selected song to index 0 of state.trackIdsByOrder
 
     const currTrackOrder = this.state.trackIdsByOrder;
-    console.log(`playlistCB: song id ${id} is now top in ${this.state.side} playlist's state.trackIdsByOrder`);
+    // console.log(`playlistCB: song id ${id} is now top in ${this.state.side} playlist's state.trackIdsByOrder`);
     // console.log(`current order by Id is ${currTrackOrder}`);
     
     // get index of the new Top track
@@ -74,7 +74,7 @@ class Playlist extends React.Component {
   }
 
   playlistCB_UpDown = (id, delta) => {
-    console.log(`chosen song id=${id} to move by ${delta} positions`);
+    // console.log(`chosen song id=${id} to move by ${delta} positions`);
     
     const currTrackOrder = this.state.trackIdsByOrder;
     
@@ -83,7 +83,7 @@ class Playlist extends React.Component {
     let newIndex;
     if (delta === 1) {
       if (currIndex === 0) {
-        console.log("you're already on the top spot, dont' do anything");
+        // console.log("you're already on the top spot, done");
         return;
       } else {
         newIndex = currIndex - 1;
@@ -91,7 +91,7 @@ class Playlist extends React.Component {
 
     } else if (delta === -1) {
       if (currIndex === currTrackOrder.length-1) {
-        console.log("you're already on the bottom spot, dont' do anything");
+        // console.log("you're already on the bottom spot, done");
         return;
       } else {
         newIndex = currIndex + 1;

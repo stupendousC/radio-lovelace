@@ -1,29 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './styles/Playlist.css';
-
 import Track from './Track';
-
-const calculatePlayTime = (tracks) => {
-  let minutes = 0;
-  let seconds = 0;
-  tracks.forEach((track) => {
-    const times = track.playtime.split(':');
-    minutes += parseInt(times[0]);
-    seconds += parseInt(times[1]);
-  });
-
-  minutes += Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-
-  seconds %= 60;
-  minutes %= 60;
-
-  seconds = ("" + seconds).padStart(2, "0");
-  minutes = ("" + minutes).padStart(2, "0");
-
-  return `${hours}:${minutes}:${seconds}`;
-}
+import {parseToHHMMSS} from './Helpers';
+// I moved calculatePlayTime() from here to Helpers b/c RadioSet is dealing with that instead
 
 class Playlist extends React.Component {
 
@@ -32,8 +12,11 @@ class Playlist extends React.Component {
     this.state = {
       side: props.side,
       tracks: props.tracks,
-      trackIdsByOrder: this.defaultTrackIdsByOrder(props),
+      totalRuntime: props.totalRuntime,
+      trackIdsByOrder: this.genTrackIdsByOrder(props),
+      // trackIdsByOrder: this.defaultTrackIdsByOrder(props),
       parentCB_Fav: props.parentCB_Fav,
+      parentCB_Switch: props.parentCB_Switch,
     }
   }
 
@@ -42,19 +25,31 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
-  // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.
+  // NEED TO MAKE SURE THIS WORKS!!!!  DRY it via Radioset render returns!!
+  genTrackIdsByOrder = (props) => {
+    if (props.topOrderPlaylist === props.side) {
+      // console.log(`Playlist will send id:${props.topOrder} to the TOP`);
+      return this.playlistCB_Order(props.topOrder);
+
+    } else {
+      return this.defaultTrackIdsByOrder(props);
+    }
+  }
+
   defaultTrackIdsByOrder = (props) => { 
+    // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
+    // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.
+    
     // for some reason... props.track.sort(); <- would also work, it automatically knows to sort by asc id...
     const tracksObjsByOrder = props.tracks.sort((a,b) => { return (parseInt(a.id) - parseInt(b.id)) });
     return tracksObjsByOrder.map( track => { return track.id }); 
   }
-
-  // this is what gets the event trigger in Track.js will invoke, which will make the selected song
-  // go to index 0 of state.trackIdsByOrder
+  
   playlistCB_Order = (id) => {
+  // the event trigger in Track.js will invoke this, which will move the selected song to index 0 of state.trackIdsByOrder
+
     const currTrackOrder = this.state.trackIdsByOrder;
-    console.log(`playlistCB: song id ${id} is now top in ${this.state.side} playlist's state.trackIdsByOrder`);
+    // console.log(`playlistCB: song id ${id} is now top in ${this.state.side} playlist's state.trackIdsByOrder`);
     // console.log(`current order by Id is ${currTrackOrder}`);
     
     // get index of the new Top track
@@ -73,6 +68,44 @@ class Playlist extends React.Component {
     // console.log(`new ORDER = ${this.state.trackIdsByOrder}`);
   }
 
+  playlistCB_Switch = (id, playlistName) => {
+    // console.log(`passing it back up to Radioset! ${id} & ${playlistName}`);
+    this.state.parentCB_Switch(id, playlistName);
+  }
+
+  playlistCB_UpDown = (id, delta) => {
+    // console.log(`chosen song id=${id} to move by ${delta} positions`);
+    
+    const currTrackOrder = this.state.trackIdsByOrder;
+    
+    const currIndex = currTrackOrder.findIndex( element => parseInt(element) === parseInt(id) );
+
+    let newIndex;
+    if (delta === 1) {
+      if (currIndex === 0) {
+        // console.log("you're already on the top spot, done");
+        return;
+      } else {
+        newIndex = currIndex - 1;
+      }
+
+    } else if (delta === -1) {
+      if (currIndex === currTrackOrder.length-1) {
+        // console.log("you're already on the bottom spot, done");
+        return;
+      } else {
+        newIndex = currIndex + 1;
+      }
+    }
+
+    const temp = currTrackOrder[newIndex];
+    currTrackOrder[newIndex] = currTrackOrder[currIndex];
+    currTrackOrder[currIndex] = temp;
+
+    this.setState({
+      trackIdsByOrder: currTrackOrder,
+    })
+  }
 
   render() {
     const tracks = this.state.tracks;
@@ -84,11 +117,9 @@ class Playlist extends React.Component {
       return match;
     });
 
-    // console.log(`TOP TRACK = ${tracksInOrder[0].title}`);
-
     const trackCount = tracks.length;
-    const playtime = calculatePlayTime(tracks);
-
+    const playtime = parseToHHMMSS(this.state.totalRuntime); 
+  
     const trackElements = tracksInOrder.map((track, i) => {
       return (
         <Track
@@ -98,6 +129,9 @@ class Playlist extends React.Component {
           favorite={track.favorite}
           parentCB_Fav={this.playlistCB_Fav}
           parentCB_Order={this.playlistCB_Order}
+          parentCB_Switch={this.playlistCB_Switch}
+          parentCB_UpDown={this.playlistCB_UpDown}
+          playlistName={this.state.side}
         />
       );
     });

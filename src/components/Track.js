@@ -1,11 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-
+import PropTypes from 'prop-types';
+import React from 'react';
 import "./styles/Track.css";
+
 
 // Here we use destructuring to extract the props into separate variables
 // See https://wesbos.com/destructuring-objects/
-const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime, albumart, favorite}) => {
+const Track = ({parentCB_UpDown, parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id, title, artist, playtime, albumart, favorite}) => {
 
   const sendNewFavUp = () => {
     // console.log(`\nu clicked on  ${title} id=${id} newFavorite=${!favorite}`);
@@ -15,8 +15,23 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
   }
 
   const sendNewOrderUp = () => {
-    console.log(`\nEVENT TRIGGERED: New Top song = ${title} id=${id}`);
+    // console.log(`\nEVENT TRIGGERED: New Top song = ${title} id=${id}`);
     parentCB_Order(id);
+  }
+
+  const switchList = () => {
+    // console.log(`\nEVENT TRIGGERED: song ${title} is switching from ${playlistName} list`);
+    parentCB_Switch(id, playlistName);
+  }
+
+  const moveUp1 = () => {
+    // console.log(`\nEVENT TRIGGERED: Move up by 1 spot: ${title} id=${id}`);
+    parentCB_UpDown(id, 1);
+  }
+
+  const moveDown1 = () => {
+    // console.log(`\nEVENT TRIGGERED: Move down by 1 spot: ${title} id=${id}`);
+    parentCB_UpDown(id, -1);
   }
 
   return (
@@ -31,14 +46,31 @@ const Track = ({parentCB_Fav, parentCB_Order, id, order, title, artist, playtime
       />
       <p className="track--artist">{artist}</p>
       <p className="track--playtime">{playtime}</p>
+
+      <button
+        className="track--control track--up-1"
+        onClick={moveUp1}
+        >
+        <span role="img" aria-label="point up">👆</span>
+      </button>
+
+      <button
+        className="track--control track--down-1"
+        onClick={moveDown1}
+        >
+        <span role="img" aria-label="point down">👇</span>
+      </button>
+
       <button
         className="track--control track--to-top"
         onClick={sendNewOrderUp}
         >
         <span role="img" aria-label="send to top">🔝</span>
       </button>
+
       <button
         className="track--control track--switch"
+        onClick={switchList}
         >
         <span role="img" aria-label="switch lists">↔</span>
       </button>

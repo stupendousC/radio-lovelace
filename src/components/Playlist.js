@@ -1,11 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './styles/Playlist.css';
-
 import Track from './Track';
-
-import {calculatePlayTime} from './Helpers';
-// I moved calculatePlayTime() from here to Helpers b/c I want to use it in RadioSet too
+import {parseToHHMMSS} from './Helpers';
+// I moved calculatePlayTime() from here to Helpers b/c RadioSet is dealing with that instead
 
 class Playlist extends React.Component {
 
@@ -14,6 +12,7 @@ class Playlist extends React.Component {
     this.state = {
       side: props.side,
       tracks: props.tracks,
+      totalRuntime: props.totalRuntime,
       trackIdsByOrder: this.genTrackIdsByOrder(props),
       // trackIdsByOrder: this.defaultTrackIdsByOrder(props),
       parentCB_Fav: props.parentCB_Fav,
@@ -85,22 +84,9 @@ class Playlist extends React.Component {
       return match;
     });
 
-    // console.log(`TOP TRACK = ${tracksInOrder[0].title}`);
-
     const trackCount = tracks.length;
-    const playtime = calculatePlayTime(tracks);     
-    // TODO: since I'm already doing this in RadioSet, why not just use that instead of calculating again???
-    // then I can just delete the dependencies above!
-    
-    
-    
-    
-    
-    
-    
-    
-    const side = this.state.side
-
+    const playtime = parseToHHMMSS(this.state.totalRuntime); 
+  
     const trackElements = tracksInOrder.map((track, i) => {
       return (
         <Track
@@ -111,7 +97,7 @@ class Playlist extends React.Component {
           parentCB_Fav={this.playlistCB_Fav}
           parentCB_Order={this.playlistCB_Order}
           parentCB_Switch={this.playlistCB_Switch}
-          playlistName={side}
+          playlistName={this.state.side}
         />
       );
     });

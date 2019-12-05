@@ -13,8 +13,17 @@ export const parsePlaytime = function(playtimeStr) {
   return totalSecs;  
   }
 
+export const parseToHHMMSS = function(playtimeInSeconds) {
+  // playtimeInSeconds is in integer of seconds, return as "HH:MM:SS" format
+  const minAndHours = Math.floor(playtimeInSeconds / 60);
+  const ss = playtimeInSeconds % 60;
+  const hh = Math.floor(minAndHours / 60);
+  const mm = minAndHours % 60;
+  return `${hh}:${mm}:${ss}`;
+}
 
-// this came from Playlist originally, but I'm using it in RadioSet instead
+// this came from Playlist originally, just stashing it here for now.  
+// I ended up calculating playtime another way instead
 export const calculatePlayTime = (tracks) => {
     let minutes = 0;
     let seconds = 0;

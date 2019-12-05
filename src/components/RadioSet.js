@@ -1,16 +1,21 @@
 import React from 'react';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
-import {calculatePlayTime} from './Helpers';
 
 export default class RadioSet extends React.Component {
   constructor(props) {
     super(props)
-    const [first, second] = this.genDefaultPlaylists(props)
+    const defaultPlaylistsHash = this.genDefaultPlaylists(props)
+    const [first, second] = defaultPlaylistsHash.playlists
+    const [firstCumulRuntime, secondCumulRuntime] = defaultPlaylistsHash.playlistRuntimes
     this.state = {
       playlists: {
         morning: first,
         evening: second,
+      },
+      playlistRuntimes: {
+        morning: firstCumulRuntime,
+        evening: secondCumulRuntime,
       },
       parentCB_Fav: props.parentCB_Fav,
       
@@ -50,7 +55,7 @@ export default class RadioSet extends React.Component {
         secondCumulRuntime += tracksPlaytimeSorted[i].playtimeTotalSecs;
       }
     }
-    return [first, second];
+    return { playlists: [first, second], playlistRuntimes: [firstCumulRuntime, secondCumulRuntime]};
   }
 
   radioSetCB_Fav = (id, favorite) => {
@@ -135,6 +140,7 @@ export default class RadioSet extends React.Component {
             // needs to go with the CORRECT playlistname!!!
             topOrderSongId={this.state.topOrderSongId}
             topOrderPlaylist={this.state.topOrderPlaylist}
+            totalRuntime={this.state.playlistRuntimes.morning}
           />
           <Playlist
             side="Evening"
@@ -144,6 +150,7 @@ export default class RadioSet extends React.Component {
             // needs to go with the CORRECT playlistname!!!
             topOrderSongId={this.state.topOrderSongId}
             topOrderPlaylist={this.state.topOrderPlaylist}
+            totalRuntime={this.state.playlistRuntimes.evening}
           />
         </section>
       </div>

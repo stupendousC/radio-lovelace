@@ -31,43 +31,56 @@ export default class RadioSet extends React.Component {
     // now open up the zipper, 1 track goes on left and 1 track goes on right, etc. 
     let first = [];
     let second = [];
-    tracksPlaytimeSorted.map ((track, i) => {
-      return (i%2 === 0)? (first.push(track)):(second.push(track));
-    })
-    // theoretically first[] and second[] should have ~equal playtime,
-    // ... UNLESS there's a single outlier that ruins the balance (which, in this case, there is)
 
-    // check for playtime equality (i'd rather do it here, than send it down to playlist to check there)
-    let firstPlaytimesAll = first.reduce((a,b) => a + b.playtimeTotalSecs, 0);
-    let secondPlaytimesAll = second.reduce((a,b) => a + b.playtimeTotalSecs, 0);
-    const diff = Math.abs(firstPlaytimesAll - secondPlaytimesAll);
-    const acceptableDiff = 300;    // I'm ok if the 2 playlists were less than 5 min apart
-    let longerList;
-    let shorterList;
-
-    if (diff <= acceptableDiff) {
-      // good, both playlist total run times are within the acceptableDiff range from each other
-      return [first, second];
-    } else if (firstPlaytimesAll > secondPlaytimesAll) {
-      longerList = first;
-      shorterList = second;
-    } else if (firstPlaytimesAll < secondPlaytimesAll) {
-      longerList = second;
-      shorterList = first;
-    }
+    // HOLD UP!!!!!!!! EVEN BETTER SOLUTION!!! 
+      // setup: add longest song to array1
+    // iterate thru all tracks starting from the high end, index -2
+      // add curr song to whichever array that has the shorter total runtime
+      // this way, everystep is actively trying to even out the difference between the two,
+      // like, if we had a single super outlier, we'll start the first few rounds like abbbbb... 
+      // until it eventually becomes abababab :-D!!!!!  Whatever little difference at teh end will be minimal :-D
     
-    const playtimeToMove = diff/2;
-    console.log(playtimeToMove);
-    // go to the longer list, find a song with playtimeTotalSecs closest to this playtimeToMove value, and move it to the shorter list :-D
-    // do this with finding whichever has the minimum value of Math.abs(songObj.playtimeTotalSecs - playtimeToMove)
 
 
 
+    // DECENT IF THERE'S NO OUTLIERS
+    // tracksPlaytimeSorted.map ((track, i) => {
+    //   return (i%2 === 0)? (first.push(track)):(second.push(track));
+    // })
+    // // theoretically first[] and second[] should have ~equal playtime,
+    // // ... UNLESS there's a single outlier that ruins the balance (which, in this case, there is)
 
+    // // check for playtime equality (i'd rather do it here, than send it down to playlist to check there)
+    // let firstPlaytimesAll = first.reduce((a,b) => a + b.playtimeTotalSecs, 0);
+    // let secondPlaytimesAll = second.reduce((a,b) => a + b.playtimeTotalSecs, 0);
+    // const diff = Math.abs(firstPlaytimesAll - secondPlaytimesAll);
+    // const acceptableDiff = 300;    // I'm ok if the 2 playlists were less than 5 min apart
+    // let longerList;
+    // let shorterList;
 
-
-
+    // if (diff <= acceptableDiff) {
+    //   // good, both playlist total run times are within the acceptableDiff range from each other
+    //   return [first, second];
+    // } else if (firstPlaytimesAll > secondPlaytimesAll) {
+    //   longerList = first;
+    //   shorterList = second;
+    // } else if (firstPlaytimesAll < secondPlaytimesAll) {
+    //   longerList = second;
+    //   shorterList = first;
+    // }
     
+    // const playtimeToMove = diff/2;
+    // console.log(playtimeToMove);
+    // // go to the longer list, find a song with playtimeTotalSecs closest to this playtimeToMove value, and move it to the shorter list :-D
+    // // do this with finding whichever has the minimum value of Math.abs(songObj.playtimeTotalSecs - playtimeToMove)
+
+
+
+
+
+
+
+
     console.log(firstPlaytimesAll, secondPlaytimesAll);
     
     return [first, second];

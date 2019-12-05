@@ -9,7 +9,7 @@ export default class RadioSet extends React.Component {
     this.state = {
       playlists: {
         morning: this.genDefaultPlaylists(props)[0],
-        evening: this.genDefaultPlaylists(props)[1],
+        evening: this.genDefaultPlaylists(props)[1],  // UGH!!! I DONT WANNA DO THIS AGAIN!
       },
       parentCB_Fav: props.parentCB_Fav,
       
@@ -38,25 +38,38 @@ export default class RadioSet extends React.Component {
     // ... UNLESS there's a single outlier that ruins the balance (which, in this case, there is)
 
     // check for playtime equality (i'd rather do it here, than send it down to playlist to check there)
-    let firstPlaytimesAll = first.reduce((a,b) => { return a.playtimeTotalSecs + b.playtimeTotalSecs});
-    let secondPlaytimesAll = second.reduce((a,b) => a.playtimeTotalSecs + b.playtimeTotalSecs);
+    let firstPlaytimesAll = first.reduce((a,b) => a + b.playtimeTotalSecs, 0);
+    let secondPlaytimesAll = second.reduce((a,b) => a + b.playtimeTotalSecs, 0);
+    const diff = Math.abs(firstPlaytimesAll - secondPlaytimesAll);
+    const acceptableDiff = 300;    // I'm ok if the 2 playlists were less than 5 min apart
+    let longerList;
+    let shorterList;
+
+    if (diff <= acceptableDiff) {
+      // good, both playlist total run times are within the acceptableDiff range from each other
+      return [first, second];
+    } else if (firstPlaytimesAll > secondPlaytimesAll) {
+      longerList = first;
+      shorterList = second;
+    } else if (firstPlaytimesAll < secondPlaytimesAll) {
+      longerList = second;
+      shorterList = first;
+    }
+    
+    const playtimeToMove = diff/2;
+    console.log(playtimeToMove);
+    // go to the longer list, find a song with playtimeTotalSecs closest to this playtimeToMove value, and move it to the shorter list :-D
+    // do this with finding whichever has the minimum value of Math.abs(songObj.playtimeTotalSecs - playtimeToMove)
+
+
+
+
+
+
 
     
-    // TODO: sum up all the playtimes. Find the diff between the two, then divide that by half to get this golden number.  
-    // then go to the longer list, find a song closest to this golden number, and move it to the shorter list :-D
-
     console.log(firstPlaytimesAll, secondPlaytimesAll);
     
-
-
-
-
-
-
-
-
-
-
     return [first, second];
   }
 

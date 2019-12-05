@@ -44,11 +44,11 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  // NEED TO MAKE SURE THIS WORKS!!!!
+  // NEED TO MAKE SURE THIS WORKS!!!!  DRY it via Radioset render returns!!
   genTrackIdsByOrder = (props) => {
-    if (props.playlistToSetTopOrder) {
-      console.log(`Playlist will send id:${props.playlistToSetTopOrder} to the TOP`);
-      return this.playlistCB_Order(props.playlistToSetTopOrder);
+    if (props.topOrderPlaylist === props.side) {
+      console.log(`Playlist will send id:${props.topOrder} to the TOP`);
+      return this.playlistCB_Order(props.topOrder);
 
     } else {
       return this.defaultTrackIdsByOrder(props);

@@ -1,6 +1,7 @@
 import React from 'react';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
+import {parsePlaytime} from './Helpers';
 
 export default class RadioSet extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class RadioSet extends React.Component {
 
   genDefaultPlaylists = (props) => {
     // TODO: split the tracks into 2 playlists such that the playtimes are ~equal.  Big O = ?
+    
     const first = props.tracks.slice(0, props.tracks.length / 2);
     const second = props.tracks.slice(props.tracks.length / 2, props.tracks.length);
     return [first, second];

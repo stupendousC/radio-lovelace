@@ -73,6 +73,39 @@ class Playlist extends React.Component {
     this.state.parentCB_Switch(id, playlistName);
   }
 
+  playlistCB_UpDown = (id, delta) => {
+    console.log(`chosen song id=${id} to move by ${delta} positions`);
+    
+    const currTrackOrder = this.state.trackIdsByOrder;
+    
+    const currIndex = currTrackOrder.findIndex( element => parseInt(element) === parseInt(id) );
+
+    let newIndex;
+    if (delta === 1) {
+      if (currIndex === 0) {
+        console.log("you're already on the top spot, dont' do anything");
+        return;
+      } else {
+        newIndex = currIndex - 1;
+      }
+
+    } else if (delta === -1) {
+      if (currIndex === currTrackOrder.length-1) {
+        console.log("you're already on the bottom spot, dont' do anything");
+        return;
+      } else {
+        newIndex = currIndex + 1;
+      }
+    }
+
+    const temp = currTrackOrder[newIndex];
+    currTrackOrder[newIndex] = currTrackOrder[currIndex];
+    currTrackOrder[currIndex] = temp;
+
+    this.setState({
+      trackIdsByOrder: currTrackOrder,
+    })
+  }
 
   render() {
     const tracks = this.state.tracks;
@@ -97,6 +130,7 @@ class Playlist extends React.Component {
           parentCB_Fav={this.playlistCB_Fav}
           parentCB_Order={this.playlistCB_Order}
           parentCB_Switch={this.playlistCB_Switch}
+          parentCB_UpDown={this.playlistCB_UpDown}
           playlistName={this.state.side}
         />
       );

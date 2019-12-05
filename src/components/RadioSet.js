@@ -31,8 +31,7 @@ export default class RadioSet extends React.Component {
     const tracksPlaytimeSorted = props.tracks.sort( (a,b) => { 
       return ((a.playtimeTotalSecs) - (b.playtimeTotalSecs) 
     )});
-
-    console.log(tracksPlaytimeSorted);
+    // console.log(tracksPlaytimeSorted);
 
     // setup: add longest song to first array
     let first = [];

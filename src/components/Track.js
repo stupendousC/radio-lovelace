@@ -5,7 +5,7 @@ import "./styles/Track.css";
 
 // Here we use destructuring to extract the props into separate variables
 // See https://wesbos.com/destructuring-objects/
-const Track = ({parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id, title, artist, playtime, albumart, favorite}) => {
+const Track = ({parentCB_UpDown, parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id, title, artist, playtime, albumart, favorite}) => {
 
   const sendNewFavUp = () => {
     // console.log(`\nu clicked on  ${title} id=${id} newFavorite=${!favorite}`);
@@ -26,12 +26,12 @@ const Track = ({parentCB_Switch, playlistName, parentCB_Fav, parentCB_Order, id,
 
   const moveUp1 = () => {
     console.log(`\nEVENT TRIGGERED: Move up by 1 spot: ${title} id=${id}`);
-    // TODO!
+    parentCB_UpDown(id, 1);
   }
 
   const moveDown1 = () => {
     console.log(`\nEVENT TRIGGERED: Move down by 1 spot: ${title} id=${id}`);
-    // TODO!
+    parentCB_UpDown(id, -1);
   }
 
   return (

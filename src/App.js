@@ -3,10 +3,13 @@ import './App.css';
 
 import RadioSet from './components/RadioSet';
 import songData from './data/tracks.json';
+import {parsePlaytime} from './components/Helpers';
+
 
 songData.forEach((song, i) => {
   song.id = i;
   song.favorite = false;
+  song.playtimeTotalSecs = parsePlaytime(song.playtime);
 });
 
 class App extends Component {

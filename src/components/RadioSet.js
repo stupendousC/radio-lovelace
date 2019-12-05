@@ -1,7 +1,7 @@
 import React from 'react';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
-import {parsePlaytime} from './Helpers';
+import {calculatePlayTime} from './Helpers';
 
 export default class RadioSet extends React.Component {
   constructor(props) {
@@ -21,8 +21,42 @@ export default class RadioSet extends React.Component {
   genDefaultPlaylists = (props) => {
     // TODO: split the tracks into 2 playlists such that the playtimes are ~equal.  Big O = ?
     
-    const first = props.tracks.slice(0, props.tracks.length / 2);
-    const second = props.tracks.slice(props.tracks.length / 2, props.tracks.length);
+    // generating tracksPlaytimeSorted is probably O(n log n)
+    const tracksPlaytimeSorted = props.tracks.sort( (a,b) => { 
+      return ((a.playtimeTotalSecs) - (b.playtimeTotalSecs) 
+    )});
+
+    console.log(tracksPlaytimeSorted);
+    
+    // now open up the zipper, 1 track goes on left and 1 track goes on right, etc. 
+    let first = [];
+    let second = [];
+    tracksPlaytimeSorted.map ((track, i) => {
+      return (i%2 === 0)? (first.push(track)):(second.push(track));
+    })
+    // theoretically first[] and second[] should have ~equal playtime,
+    // ... UNLESS there's a single outlier that ruins the balance (which, in this case, there is)
+
+    // check for playtime equality (i'd rather do it here, than send it down to playlist to check there)
+    let firstPlaytimesAll = first.reduce((a,b) => { return a.playtimeTotalSecs + b.playtimeTotalSecs});
+    let secondPlaytimesAll = second.reduce((a,b) => a.playtimeTotalSecs + b.playtimeTotalSecs);
+
+    
+    // TODO: sum up all the playtimes. Find the diff between the two, then divide that by half to get this golden number.  
+    // then go to the longer list, find a song closest to this golden number, and move it to the shorter list :-D
+
+    console.log(firstPlaytimesAll, secondPlaytimesAll);
+    
+
+
+
+
+
+
+
+
+
+
     return [first, second];
   }
 

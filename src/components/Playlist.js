@@ -4,26 +4,8 @@ import './styles/Playlist.css';
 
 import Track from './Track';
 
-const calculatePlayTime = (tracks) => {
-  let minutes = 0;
-  let seconds = 0;
-  tracks.forEach((track) => {
-    const times = track.playtime.split(':');
-    minutes += parseInt(times[0]);
-    seconds += parseInt(times[1]);
-  });
-
-  minutes += Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-
-  seconds %= 60;
-  minutes %= 60;
-
-  seconds = ("" + seconds).padStart(2, "0");
-  minutes = ("" + minutes).padStart(2, "0");
-
-  return `${hours}:${minutes}:${seconds}`;
-}
+import {calculatePlayTime} from './Helpers';
+// I moved calculatePlayTime() from here to Helpers b/c I want to use it in RadioSet too
 
 class Playlist extends React.Component {
 
@@ -106,7 +88,17 @@ class Playlist extends React.Component {
     // console.log(`TOP TRACK = ${tracksInOrder[0].title}`);
 
     const trackCount = tracks.length;
-    const playtime = calculatePlayTime(tracks);
+    const playtime = calculatePlayTime(tracks);     
+    // TODO: since I'm already doing this in RadioSet, why not just use that instead of calculating again???
+    // then I can just delete the dependencies above!
+    
+    
+    
+    
+    
+    
+    
+    
     const side = this.state.side
 
     const trackElements = tracksInOrder.map((track, i) => {

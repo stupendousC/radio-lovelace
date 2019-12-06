@@ -1,6 +1,7 @@
 import React from 'react';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
+import {Capitalize} from './Helpers';
 
 export default class RadioSet extends React.Component {
   constructor(props) {
@@ -62,95 +63,125 @@ export default class RadioSet extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
+  removeSongFromList = (id, oldPlaylistTracks) => {
+    // remove song from oldPlaylist & setState()
+    // return that song object with the updated oldPlaylistTracks array
+      let song;
+      for (let i=0; i<oldPlaylistTracks.length; i++) {
+        if (oldPlaylistTracks[i].id === id) {
+          song = oldPlaylistTracks.splice(i, 1)[0];
+          // console.log(`song found: ${song.title}`);
+          return [song, oldPlaylistTracks];
+        }
+      }
+  }
+  
+  updateListRuntime = (affectedPlaylistName, deltaTimeInSecs) => {
+    // if removing song, deltaTimeInSecs will be negative.  Otherwise it's positive for adding a song.
+    const currPlaylistRuntime = this.state.playlistRuntimes[affectedPlaylistName];
+    const updatedRuntime = currPlaylistRuntime + deltaTimeInSecs;
+    // console.log(`${affectedPlaylistName} runtime went from ${currPlaylistRuntime} to ${updatedRuntime}`);
+
+    return updatedRuntime;
+  }
+
   radioSetCB_Switch = (id, playlistName) => {
     console.log(`Radioset has received info: ${id} & ${[playlistName]}`);
-    
-    console.log("PAUSED!");
-    return;
 
-    // identify 1. oldTracks where song is from, 2. newTracks where it's gonna go 
-    let oldTracksName;
-    let oldTracks;
-    let newTracksName;
-    let newTracks;
-    playlistName = playlistName.toLowerCase();
+    // identify 1. oldPlaylist where song is from, 2. newPlaylist where it's gonna go 
+    const oldPlaylistName = playlistName.toLowerCase();
+    let newPlaylistName;
+    let newPlaylist;
+    let song;
 
     const allPlaylistEntries = Object.entries(this.state.playlists);
 
     for (let i=0; i<allPlaylistEntries.length; i++) {
-      // For currPair & prevPair, index 0 = :name of the state.playlist, index 1 = [tracks]
-      const currPair = allPlaylistEntries[i];
+      const name = allPlaylistEntries[i][0];
+      let tracks = allPlaylistEntries[i][1];
 
-      const name = currPair[0];
-      const tracks = currPair[1];
-      if (playlistName === name) {
-        oldTracksName = name;  
-        oldTracks = tracks;
-        
-        let prevPair;
-        if (i === allPlaylistEntries.length-1) {
-          // if oldTracks happened to be the last of the state.playlists,
-          // will need to loop around to start of the array get the newTracks
-          prevPair = allPlaylistEntries[0];
+      if (name === oldPlaylistName) {
+        // remove chosen song from this oldPlaylist's tracks, adjust its playtime, and set state
+        let updatedOldPlaylist;
+        [song, updatedOldPlaylist] = this.removeSongFromList(id, tracks);
+        const updatedOldPlaylistRuntime = this.updateListRuntime(oldPlaylistName, (-song.playtimeTotalSecs));
+
+        console.log(`song is ${song.title}, runtime ${song.playtimeTotalSecs} oldPlaylist now has length ${updatedOldPlaylist.length} and new runtime ${updatedOldPlaylistRuntime}`);
+
+        // setState on oldList... THIS DOES NOT WORK YET!!!
+        // const updatedOldPlaylistInfo = () => { 
+        //   return { playlists: {[`${oldPlaylistName}`] : updatedOldPlaylist}} };
+        // this.setState ();
+        console.log(`\nDOUBLE CHECK ON STATE, which should be set for OLDPLAYLIST both tracklist & runtime by now!!! `);
+
+        // Assign newPlaylistName depending on index position of oldPlaylistName
+        if (i < allPlaylistEntries.length - 1) {
+          newPlaylistName = allPlaylistEntries[i+1][0];
+          newPlaylist = allPlaylistEntries[i+1][1];
         } else {
-          prevPair = allPlaylistEntries[i+1];
+          // if oldPlaylist is @ the end of this.state.playlists[], then newPlaylist will have to wrap around to index0 
+          newPlaylistName = allPlaylistEntries[0][0];
+          newPlaylist = allPlaylistEntries[0][1];
         }
-        newTracksName = prevPair[0]; 
-        newTracks = prevPair[1];
-        
-        break; 
-      }
+        break;
+      } 
     }
     
-    // remove song from oldTracks, set aside, .setState()
-    let song;
-    for (let i=0; i<oldTracks.length; i++) {
-      if (oldTracks[i].id === id) {
-        song = oldTracks.splice(i, 1)[0];
-        break;
-      }
-    }
+    
+    // now ready to insert song into this current newPlaylist
+    newPlaylist.push(song);
+    // update that playlist's total runtime
+    const updatedRuntime = this.updateListRuntime(newPlaylistName, song.playtimeTotalSecs)
+    console.log(`SET STATE!!!!!!!!  ON: ${newPlaylist.length} tracks in ${newPlaylistName}, new runtime=${updatedRuntime}`);
+    
+    console.log( 'we want this song to be the first song in Playlist.state.trackIdsByOrder!');
 
-    // send song to new playlist here in state
-    newTracks.unshift(song);
-    this.setState({ topOrderSongId: song.id, topOrderPlaylist: {newTracksName} })
-    // send as props with the CORRECT <Playlist /> to tell them to use Playlist.playlistCB_Order(id) on our song!!!
+
+
+
+
+
+
+    }
   
-    // setState() on the both oldTracks & newTracks
-    console.log('NEED TO SET STATE!!!!!');
-  }
 
 
   addNewPlaylist = () => {
     // TODO: trickle down from app.js, also need a button there.
+
+
+
+
+
   }
 
   render() {
+
+    const allPlaylistComponents = () => {
+      const allPlaylistEntries = Object.entries(this.state.playlists);
+
+      return allPlaylistEntries.map ((playlistState, i) => {
+        const name = playlistState[0];
+        const tracks = playlistState[1];
+        const totalRuntime = Object.entries(this.state.playlistRuntimes)[i][1];
+        
+        return (
+              <Playlist 
+                key={i}
+                side={Capitalize(name)}
+                tracks={tracks}
+                parentCB_Fav={this.radioSetCB_Fav}
+                parentCB_Switch={this.radioSetCB_Switch}
+                totalRuntime={totalRuntime}
+              />
+            );
+      })
+    }
+
     return (
       <div className="radio-set">
         <section className="radio-set--playlist-container">
-
-          {/* TODO!! INSTEAD OF HARDCODING IT, LOOP THRU the object.entries(this.state.playlists to gen the sides prop as a capitalized string!) */}
-          <Playlist
-            side="Morning"
-            tracks={this.state.playlists.morning}
-            parentCB_Fav={this.radioSetCB_Fav}
-            parentCB_Switch={this.radioSetCB_Switch}
-            // needs to go with the CORRECT playlistname!!!
-            topOrderSongId={this.state.topOrderSongId}
-            topOrderPlaylist={this.state.topOrderPlaylist}
-            totalRuntime={this.state.playlistRuntimes.morning}
-          />
-          <Playlist
-            side="Evening"
-            tracks={this.state.playlists.evening}
-            parentCB_Fav={this.radioSetCB_Fav}
-            parentCB_Switch={this.radioSetCB_Switch}
-            // needs to go with the CORRECT playlistname!!!
-            topOrderSongId={this.state.topOrderSongId}
-            topOrderPlaylist={this.state.topOrderPlaylist}
-            totalRuntime={this.state.playlistRuntimes.evening}
-          />
+          {allPlaylistComponents()}
         </section>
       </div>
     );

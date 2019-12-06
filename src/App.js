@@ -36,17 +36,6 @@ class App extends Component {
     this.setState({
       songData: newSongData
     })
-    
-    // ALTERNATIVE way of iterating over newSongData... I suppose this is more efficient cuz u .map only once, compared to up to twice above
-    // I got this from scrimba video tutorials, but i don't like the pattern, 
-    // so I'm sticking with my own, much easier to understand
-    // this.setState(prevState => {
-    //   const newSongData = prevState.songData.map( song => {
-    //     if (song.id === id) { song.favorite = !song.favorite; }
-    //     return song;
-    //   })
-    //   return { songData:newSongData }
-    // })
   }
 
   makeNewPlaylist = (event) => {

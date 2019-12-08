@@ -14,7 +14,6 @@ class Playlist extends React.Component {
       tracks: props.tracks,
       totalRuntime: props.totalRuntime,
       trackIdsByOrder: this.genTrackIdsByOrder(props),
-      // trackIdsByOrder: this.defaultTrackIdsByOrder(props),
       parentCB_Fav: props.parentCB_Fav,
       parentCB_Switch: props.parentCB_Switch,
     }
@@ -25,7 +24,6 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  // NEED TO MAKE SURE THIS WORKS!!!!  DRY it via Radioset render returns!!
   genTrackIdsByOrder = (props) => {
     if (props.topOrderPlaylist === props.side) {
       // console.log(`Playlist will send id:${props.topOrder} to the TOP`);
@@ -40,8 +38,9 @@ class Playlist extends React.Component {
     // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
     // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.
     
-    // for some reason... props.track.sort(); <- would also work, it automatically knows to sort by asc id...
-    const tracksObjsByOrder = props.tracks.sort((a,b) => { return (parseInt(a.id) - parseInt(b.id)) });
+    // props.track.sort(); <- would also work, but it automatically knows to sort by asc id...
+    // I'm sorting this by index position, b/c RadioSet's radioSetCB_Switch needs it
+    const tracksObjsByOrder = props.tracks.sort((a,b) => { return (parseInt(a.index) - parseInt(b.index)) });
     return tracksObjsByOrder.map( track => { return track.id }); 
   }
   

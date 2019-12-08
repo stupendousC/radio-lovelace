@@ -63,15 +63,14 @@ export default class RadioSet extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  removeSongFromList = (id, oldPlaylistTracks) => {
-    // remove song from oldPlaylist & setState()
+  removeSongFromList = (id, copy_oldPlaylistTracks) => {
+    // remove song matching id from oldPlaylistTracks
     // return that song object with the updated oldPlaylistTracks array
       let song;
-      for (let i=0; i<oldPlaylistTracks.length; i++) {
-        if (oldPlaylistTracks[i].id === id) {
-          song = oldPlaylistTracks.splice(i, 1)[0];
-          // console.log(`song found: ${song.title}`);
-          return [song, oldPlaylistTracks];
+      for (let i=0; i<copy_oldPlaylistTracks.length; i++) {
+        if (copy_oldPlaylistTracks[i].id === id) {
+          song = copy_oldPlaylistTracks.splice(i, 1)[0];
+          return [song, copy_oldPlaylistTracks];
         }
       }
   }
@@ -86,7 +85,7 @@ export default class RadioSet extends React.Component {
   }
 
   radioSetCB_Switch = (id, playlistName) => {
-    console.log(`Radioset has received info: ${id} & ${[playlistName]}`);
+    // console.log(`Radioset has received info: ${id} & ${[playlistName]}`);
 
     // identify 1. oldPlaylist where song is from, 2. newPlaylist where it's gonna go 
     const oldPlaylistName = playlistName.toLowerCase();
@@ -103,22 +102,22 @@ export default class RadioSet extends React.Component {
       if (name === oldPlaylistName) {
         // remove chosen song from this oldPlaylist's tracks, adjust its playtime, and set state
         let updatedOldPlaylist;
-        [song, updatedOldPlaylist] = this.removeSongFromList(id, tracks.slice());
+        let copy_oldPlaylistTracks = tracks.slice();
+        [song, updatedOldPlaylist] = this.removeSongFromList(id, copy_oldPlaylistTracks);
         const updatedOldPlaylistRuntime = this.updateListRuntime(oldPlaylistName, (-song.playtimeTotalSecs));
 
-        console.log(`song is ${song.title}, runtime ${song.playtimeTotalSecs} oldPlaylist now has length ${updatedOldPlaylist.length} and new runtime ${updatedOldPlaylistRuntime}`);
+        // console.log(`song is ${song.title}, runtime ${song.playtimeTotalSecs} oldPlaylist now has length ${updatedOldPlaylist.length} and new runtime ${updatedOldPlaylistRuntime}`);
         
-        // setState on oldList... THIS DOES NOT WORK YET!!!
-        const updatedOldPlaylistInfo =  { 
-          playlists: { [name] : updatedOldPlaylist},
-          playlistRuntimes: { [name] : updatedOldPlaylistRuntime},
-        };
-        
-        console.log(updatedOldPlaylistInfo);
-        
-        // this.setState ({...updatedOldPlaylistInfo});
-        console.log(`\nDOUBLE CHECK ON STATE, which should be set for OLDPLAYLIST both tracklist & runtime by now!!! `);
+        // setState on oldList
+        const updatedOldPlaylistInfo = {...this.state};
+        updatedOldPlaylistInfo.playlists[name]= updatedOldPlaylist;
+        updatedOldPlaylistInfo.playlistRuntimes[name]= updatedOldPlaylistRuntime;
+        this.setState ({...updatedOldPlaylistInfo});
 
+        // console.log(`\nDOUBLE CHECK ON STATE, which should be set for OLDPLAYLIST both tracklist & runtime by now!!! `);
+        // console.log(this.state.playlists);
+        // console.log(this.state.playlistRuntimes);
+        
         // Assign newPlaylistName depending on index position of oldPlaylistName
         if (i < allPlaylistEntries.length - 1) {
           newPlaylistName = allPlaylistEntries[i+1][0];
@@ -133,13 +132,21 @@ export default class RadioSet extends React.Component {
     }
     
     
-    // now ready to insert song into this current newPlaylist
+    // now ready to insert song into top of this current newPlaylist
     let updatedNewPlaylist = newPlaylist.slice();
-    updatedNewPlaylist.push(song);
+    updatedNewPlaylist.unshift(song);
     // update that playlist's total runtime
-    const updatedRuntime = this.updateListRuntime(newPlaylistName, song.playtimeTotalSecs)
-    console.log(`SET STATE!!!!!!!!  ON: ${updatedNewPlaylist.length} tracks in ${newPlaylistName}, new runtime=${updatedRuntime}`);
-    
+    const updatedNewPlaylistRuntime = this.updateListRuntime(newPlaylistName, song.playtimeTotalSecs)
+    // get copy of prev state, make changes, then setState()
+    const updatedNewPlaylistInfo = {...this.state};
+    updatedNewPlaylistInfo.playlists[newPlaylistName]= updatedNewPlaylist;
+    updatedNewPlaylistInfo.playlistRuntimes[newPlaylistName]= updatedNewPlaylistRuntime;
+    this.setState ({...updatedNewPlaylistInfo});
+
+    console.log(`\nDOUBLE CHECK ON STATE, which should be updated on both the oldPlaylist and newPlaylist now `);
+    console.log(this.state.playlists);
+    console.log(this.state.playlistRuntimes);
+
     console.log( 'we want this song to be the first song in Playlist.state.trackIdsByOrder!');
 
 

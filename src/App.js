@@ -50,10 +50,15 @@ class App extends Component {
           <h1 className="page-header--title">Radio Lovelace</h1>
         </header>
 
-        <fieldset>
-          <legend><h3>Add a new playlist</h3></legend>
-          <input type="text" placeholder="LINK BUTTON TO THIS TEXT SOMEHOW!!!!" className="TODO"></input>
-          <button type="submit" onClick={this.makeNewPlaylist}>Let's rock!</button>
+        <fieldset className="addNewPlaylist-fieldset">
+          <h1>This doesn't work yet</h1>
+          <form onSubmit={this.makeNewPlaylist}>
+            <label>
+              <h3>Add a new playlist</h3>
+              <input type="text" name="name" className="TODO"></input>
+            </label>
+            <input type="submit" value="Let's Rock!" />
+          </form>
         </fieldset>
         
 

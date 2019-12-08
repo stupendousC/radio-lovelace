@@ -103,15 +103,20 @@ export default class RadioSet extends React.Component {
       if (name === oldPlaylistName) {
         // remove chosen song from this oldPlaylist's tracks, adjust its playtime, and set state
         let updatedOldPlaylist;
-        [song, updatedOldPlaylist] = this.removeSongFromList(id, tracks);
+        [song, updatedOldPlaylist] = this.removeSongFromList(id, tracks.slice());
         const updatedOldPlaylistRuntime = this.updateListRuntime(oldPlaylistName, (-song.playtimeTotalSecs));
 
         console.log(`song is ${song.title}, runtime ${song.playtimeTotalSecs} oldPlaylist now has length ${updatedOldPlaylist.length} and new runtime ${updatedOldPlaylistRuntime}`);
-
+        
         // setState on oldList... THIS DOES NOT WORK YET!!!
-        // const updatedOldPlaylistInfo = () => { 
-        //   return { playlists: {[`${oldPlaylistName}`] : updatedOldPlaylist}} };
-        // this.setState ();
+        const updatedOldPlaylistInfo =  { 
+          playlists: { [name] : updatedOldPlaylist},
+          playlistRuntimes: { [name] : updatedOldPlaylistRuntime},
+        };
+        
+        console.log(updatedOldPlaylistInfo);
+        
+        // this.setState ({...updatedOldPlaylistInfo});
         console.log(`\nDOUBLE CHECK ON STATE, which should be set for OLDPLAYLIST both tracklist & runtime by now!!! `);
 
         // Assign newPlaylistName depending on index position of oldPlaylistName
@@ -129,10 +134,11 @@ export default class RadioSet extends React.Component {
     
     
     // now ready to insert song into this current newPlaylist
-    newPlaylist.push(song);
+    let updatedNewPlaylist = newPlaylist.slice();
+    updatedNewPlaylist.push(song);
     // update that playlist's total runtime
     const updatedRuntime = this.updateListRuntime(newPlaylistName, song.playtimeTotalSecs)
-    console.log(`SET STATE!!!!!!!!  ON: ${newPlaylist.length} tracks in ${newPlaylistName}, new runtime=${updatedRuntime}`);
+    console.log(`SET STATE!!!!!!!!  ON: ${updatedNewPlaylist.length} tracks in ${newPlaylistName}, new runtime=${updatedRuntime}`);
     
     console.log( 'we want this song to be the first song in Playlist.state.trackIdsByOrder!');
 

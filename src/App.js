@@ -51,7 +51,7 @@ class App extends Component {
         </header>
 
         <fieldset className="addNewPlaylist-fieldset">
-          <h1>This doesn't work yet</h1>
+          <h1>This doesn't work yet.  Also, switchList button buggy</h1>
           <form onSubmit={this.makeNewPlaylist}>
             <label>
               <h3>Add a new playlist</h3>

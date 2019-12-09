@@ -1,7 +1,7 @@
 import React from 'react';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
-import {Capitalize} from './Helpers';
+import {capitalize, sortById} from './Helpers';
 
 export default class RadioSet extends React.Component {
   constructor(props) {
@@ -19,9 +19,6 @@ export default class RadioSet extends React.Component {
         evening: secondCumulRuntime,
       },
       parentCB_Fav: props.parentCB_Fav,
-      
-      topOrderSongId: null,
-      topOrderPlaylist: null,
     }
   }
 
@@ -32,7 +29,6 @@ export default class RadioSet extends React.Component {
     const tracksPlaytimeSorted = props.tracks.sort( (a,b) => { 
       return ((a.playtimeTotalSecs) - (b.playtimeTotalSecs) 
     )});
-    // console.log(tracksPlaytimeSorted);
 
     // setup: add longest song to first array
     let first = [];
@@ -55,6 +51,12 @@ export default class RadioSet extends React.Component {
         secondCumulRuntime += tracksPlaytimeSorted[i].playtimeTotalSecs;
       }
     }
+
+    // purely as an aesthetic choice, I want to present both playlists in asc order of song ids
+    first = first.sort( (a,b) => { 
+      return ((a.id) - (b.id) 
+    )});
+    second = sortById(second);
     return { playlists: [first, second], playlistRuntimes: [firstCumulRuntime, secondCumulRuntime]};
   }
 
@@ -147,8 +149,6 @@ export default class RadioSet extends React.Component {
     console.log(this.state.playlists);
     console.log(this.state.playlistRuntimes);
 
-    console.log( 'we want this song to be the first song in Playlist.state.trackIdsByOrder!');
-
 
 
 
@@ -169,10 +169,13 @@ export default class RadioSet extends React.Component {
   }
 
   render() {
-
     const allPlaylistComponents = () => {
       const allPlaylistEntries = Object.entries(this.state.playlists);
 
+      console.log('RENDERING');
+      console.log(allPlaylistEntries);
+      console.log(Object.entries(this.state.playlistRuntimes));
+      
       return allPlaylistEntries.map ((playlistState, i) => {
         const name = playlistState[0];
         const tracks = playlistState[1];
@@ -181,7 +184,7 @@ export default class RadioSet extends React.Component {
         return (
               <Playlist 
                 key={i}
-                side={Capitalize(name)}
+                side={capitalize(name)}
                 tracks={tracks}
                 parentCB_Fav={this.radioSetCB_Fav}
                 parentCB_Switch={this.radioSetCB_Switch}

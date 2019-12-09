@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
-import {Capitalize} from './Helpers';
+import {capitalize, sortById} from './Helpers';
 
 export default class RadioSet extends React.Component {
   constructor(props) {
@@ -19,9 +20,6 @@ export default class RadioSet extends React.Component {
         evening: secondCumulRuntime,
       },
       parentCB_Fav: props.parentCB_Fav,
-      
-      topOrderSongId: null,
-      topOrderPlaylist: null,
     }
   }
 
@@ -32,7 +30,6 @@ export default class RadioSet extends React.Component {
     const tracksPlaytimeSorted = props.tracks.sort( (a,b) => { 
       return ((a.playtimeTotalSecs) - (b.playtimeTotalSecs) 
     )});
-    // console.log(tracksPlaytimeSorted);
 
     // setup: add longest song to first array
     let first = [];
@@ -55,6 +52,12 @@ export default class RadioSet extends React.Component {
         secondCumulRuntime += tracksPlaytimeSorted[i].playtimeTotalSecs;
       }
     }
+
+    // purely as an aesthetic choice, I want to present both playlists in asc order of song ids
+    first = first.sort( (a,b) => { 
+      return ((a.id) - (b.id) 
+    )});
+    second = sortById(second);
     return { playlists: [first, second], playlistRuntimes: [firstCumulRuntime, secondCumulRuntime]};
   }
 
@@ -63,15 +66,14 @@ export default class RadioSet extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  removeSongFromList = (id, oldPlaylistTracks) => {
-    // remove song from oldPlaylist & setState()
+  removeSongFromList = (id, copy_oldPlaylistTracks) => {
+    // remove song matching id from oldPlaylistTracks
     // return that song object with the updated oldPlaylistTracks array
       let song;
-      for (let i=0; i<oldPlaylistTracks.length; i++) {
-        if (oldPlaylistTracks[i].id === id) {
-          song = oldPlaylistTracks.splice(i, 1)[0];
-          // console.log(`song found: ${song.title}`);
-          return [song, oldPlaylistTracks];
+      for (let i=0; i<copy_oldPlaylistTracks.length; i++) {
+        if (copy_oldPlaylistTracks[i].id === id) {
+          song = copy_oldPlaylistTracks.splice(i, 1)[0];
+          return [song, copy_oldPlaylistTracks];
         }
       }
   }
@@ -86,7 +88,7 @@ export default class RadioSet extends React.Component {
   }
 
   radioSetCB_Switch = (id, playlistName) => {
-    console.log(`Radioset has received info: ${id} & ${[playlistName]}`);
+    // console.log(`Radioset has received info: ${id} & ${[playlistName]}`);
 
     // identify 1. oldPlaylist where song is from, 2. newPlaylist where it's gonna go 
     const oldPlaylistName = playlistName.toLowerCase();
@@ -103,17 +105,16 @@ export default class RadioSet extends React.Component {
       if (name === oldPlaylistName) {
         // remove chosen song from this oldPlaylist's tracks, adjust its playtime, and set state
         let updatedOldPlaylist;
-        [song, updatedOldPlaylist] = this.removeSongFromList(id, tracks);
+        let copy_oldPlaylistTracks = tracks.slice();
+        [song, updatedOldPlaylist] = this.removeSongFromList(id, copy_oldPlaylistTracks);
         const updatedOldPlaylistRuntime = this.updateListRuntime(oldPlaylistName, (-song.playtimeTotalSecs));
 
-        console.log(`song is ${song.title}, runtime ${song.playtimeTotalSecs} oldPlaylist now has length ${updatedOldPlaylist.length} and new runtime ${updatedOldPlaylistRuntime}`);
-
-        // setState on oldList... THIS DOES NOT WORK YET!!!
-        // const updatedOldPlaylistInfo = () => { 
-        //   return { playlists: {[`${oldPlaylistName}`] : updatedOldPlaylist}} };
-        // this.setState ();
-        console.log(`\nDOUBLE CHECK ON STATE, which should be set for OLDPLAYLIST both tracklist & runtime by now!!! `);
-
+        // setState on oldList
+        const updatedOldPlaylistInfo = {...this.state};
+        updatedOldPlaylistInfo.playlists[name]= updatedOldPlaylist;
+        updatedOldPlaylistInfo.playlistRuntimes[name]= updatedOldPlaylistRuntime;
+        this.setState ({...updatedOldPlaylistInfo});
+        
         // Assign newPlaylistName depending on index position of oldPlaylistName
         if (i < allPlaylistEntries.length - 1) {
           newPlaylistName = allPlaylistEntries[i+1][0];
@@ -127,25 +128,18 @@ export default class RadioSet extends React.Component {
       } 
     }
     
-    
-    // now ready to insert song into this current newPlaylist
-    newPlaylist.push(song);
+    // now ready to insert song into top of this current newPlaylist
+    let updatedNewPlaylist = newPlaylist.slice();
+    updatedNewPlaylist.unshift(song);
     // update that playlist's total runtime
-    const updatedRuntime = this.updateListRuntime(newPlaylistName, song.playtimeTotalSecs)
-    console.log(`SET STATE!!!!!!!!  ON: ${newPlaylist.length} tracks in ${newPlaylistName}, new runtime=${updatedRuntime}`);
-    
-    console.log( 'we want this song to be the first song in Playlist.state.trackIdsByOrder!');
-
-
-
-
-
-
-
+    const updatedNewPlaylistRuntime = this.updateListRuntime(newPlaylistName, song.playtimeTotalSecs)
+    // get copy of prev state, make changes, then setState()
+    const updatedNewPlaylistInfo = {...this.state};
+    updatedNewPlaylistInfo.playlists[newPlaylistName]= updatedNewPlaylist;
+    updatedNewPlaylistInfo.playlistRuntimes[newPlaylistName]= updatedNewPlaylistRuntime;
+    this.setState ({...updatedNewPlaylistInfo});
     }
   
-
-
   addNewPlaylist = () => {
     // TODO: trickle down from app.js, also need a button there.
 
@@ -156,19 +150,21 @@ export default class RadioSet extends React.Component {
   }
 
   render() {
-
     const allPlaylistComponents = () => {
       const allPlaylistEntries = Object.entries(this.state.playlists);
-
+      
       return allPlaylistEntries.map ((playlistState, i) => {
         const name = playlistState[0];
         const tracks = playlistState[1];
         const totalRuntime = Object.entries(this.state.playlistRuntimes)[i][1];
         
+        console.log('RadioSet sending...',tracks.length, 'runtime=', totalRuntime);
+        
+
         return (
               <Playlist 
                 key={i}
-                side={Capitalize(name)}
+                side={capitalize(name)}
                 tracks={tracks}
                 parentCB_Fav={this.radioSetCB_Fav}
                 parentCB_Switch={this.radioSetCB_Switch}
@@ -186,4 +182,9 @@ export default class RadioSet extends React.Component {
       </div>
     );
   }
+}
+
+RadioSet.propTypes = {
+  tracks: PropTypes.array,
+  parentCB_Fav: PropTypes.func,
 }

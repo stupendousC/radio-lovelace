@@ -1,5 +1,5 @@
 
-export const Capitalize = function(props) {
+export const capitalize = function(props) {
     return props.charAt(0).toUpperCase() + props.slice(1);
   }
 
@@ -20,6 +20,12 @@ export const parseToHHMMSS = function(playtimeInSeconds) {
   const hh = Math.floor(minAndHours / 60);
   const mm = minAndHours % 60;
   return `${hh}:${mm}:${ss}`;
+}
+
+export const sortById = function(arrayOfObjsWithId) {
+  return arrayOfObjsWithId.sort( (a,b) => { 
+    return ((a.id) - (b.id) 
+  )});
 }
 
 // this came from Playlist originally, just stashing it here for now.  

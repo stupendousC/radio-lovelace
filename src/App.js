@@ -39,8 +39,8 @@ class App extends Component {
   }
 
   makeNewPlaylist = (event) => {
-    console.log(`Making new playlist called ${event.target}`);
-    // TODO
+    console.log(`Making new playlist called ${event.target.name}`);
+    return <RadioSet tracks={[]} />
   }
 
   render() {
@@ -50,13 +50,17 @@ class App extends Component {
           <h1 className="page-header--title">Radio Lovelace</h1>
         </header>
 
-        <fieldset>
-          <legend><h3>Add a new playlist</h3></legend>
-          <input type="text" placeholder="LINK BUTTON TO THIS TEXT SOMEHOW!!!!" className="TODO"></input>
-          <button type="submit" onClick={this.makeNewPlaylist}>Let's rock!</button>
+        <fieldset className="addNewPlaylist-fieldset">
+          <h1>This doesn't work yet.  Also, switchList button buggy</h1>
+          <form onSubmit={this.makeNewPlaylist}>
+            <label>
+              <h3>Add a new playlist</h3>
+              <input type="text" name="newPlaylistName"></input>
+            </label>
+            <input type="submit" value="Let's Rock!" />
+          </form>
         </fieldset>
         
-
         <main className="main">
           <RadioSet 
             tracks={songData} 

@@ -13,8 +13,7 @@ class Playlist extends React.Component {
       side: props.side,
       tracks: props.tracks,
       totalRuntime: props.totalRuntime,
-      trackIdsByOrder: this.genTrackIdsByOrder(props),
-      // trackIdsByOrder: this.defaultTrackIdsByOrder(props),
+      trackIdsByOrder: this.defaultTrackIdsByOrder(props),
       parentCB_Fav: props.parentCB_Fav,
       parentCB_Switch: props.parentCB_Switch,
     }
@@ -25,23 +24,13 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  // NEED TO MAKE SURE THIS WORKS!!!!  DRY it via Radioset render returns!!
-  genTrackIdsByOrder = (props) => {
-    if (props.topOrderPlaylist === props.side) {
-      // console.log(`Playlist will send id:${props.topOrder} to the TOP`);
-      return this.playlistCB_Order(props.topOrder);
-
-    } else {
-      return this.defaultTrackIdsByOrder(props);
-    }
-  }
-
-  defaultTrackIdsByOrder = (props) => { 
+  defaultTrackIdsByOrder = (props) => {
     // this is the initial .state of trackIdsByOrder, where it's just the ids in asc order in an array
-    // ex: [0, 1, 2, 3 ... 42] for the am jams, and [43, 44, .... 85] for the pm songs.
+    // ex: [0, 2, 7 ... 42] for the am jams, and [6, 10, 17, .... 85] for the pm songs.
     
-    // for some reason... props.track.sort(); <- would also work, it automatically knows to sort by asc id...
-    const tracksObjsByOrder = props.tracks.sort((a,b) => { return (parseInt(a.id) - parseInt(b.id)) });
+    // RadioSet is sending props.tracks initially as pre-sorted by id, and whatever ranking changes the user makes will be reflected by the indices of the affected array(s)
+    // Therefore I'm generating the state.trackIdsByOrder by index position.
+    const tracksObjsByOrder = props.tracks.sort((a,b) => { return (parseInt(a.index) - parseInt(b.index)) });
     return tracksObjsByOrder.map( track => { return track.id }); 
   }
   
@@ -49,8 +38,6 @@ class Playlist extends React.Component {
   // the event trigger in Track.js will invoke this, which will move the selected song to index 0 of state.trackIdsByOrder
 
     const currTrackOrder = this.state.trackIdsByOrder;
-    // console.log(`playlistCB: song id ${id} is now top in ${this.state.side} playlist's state.trackIdsByOrder`);
-    // console.log(`current order by Id is ${currTrackOrder}`);
     
     // get index of the new Top track
     const topIndex = currTrackOrder.findIndex( element => parseInt(element) === parseInt(id) );
@@ -64,13 +51,13 @@ class Playlist extends React.Component {
     this.setState({
       trackIdsByOrder: currTrackOrder,
     })
-    
-    // console.log(`new ORDER = ${this.state.trackIdsByOrder}`);
   }
 
   playlistCB_Switch = (id, playlistName) => {
     // console.log(`passing it back up to Radioset! ${id} & ${playlistName}`);
     this.state.parentCB_Switch(id, playlistName);
+
+    
   }
 
   playlistCB_UpDown = (id, delta) => {
@@ -83,7 +70,7 @@ class Playlist extends React.Component {
     let newIndex;
     if (delta === 1) {
       if (currIndex === 0) {
-        // console.log("you're already on the top spot, done");
+        // console.log("you're already at the top spot, done");
         return;
       } else {
         newIndex = currIndex - 1;
@@ -91,7 +78,7 @@ class Playlist extends React.Component {
 
     } else if (delta === -1) {
       if (currIndex === currTrackOrder.length-1) {
-        // console.log("you're already on the bottom spot, done");
+        // console.log("you're already at the bottom spot, done");
         return;
       } else {
         newIndex = currIndex + 1;
@@ -107,8 +94,12 @@ class Playlist extends React.Component {
     })
   }
 
-  render() {
+  render(props) {
     const tracks = this.state.tracks;
+
+    // I did receive the correct props, but it's not automatically saved to the state here
+    console.log("Playlist RECEIVED", this.props.tracks.length);
+    
 
     // here we want tracks to appear in order per .state.trackIdsByOrder, instead of just the default ids
     const tracksInOrder = this.state.trackIdsByOrder.map ((id) => {
@@ -120,6 +111,10 @@ class Playlist extends React.Component {
     const trackCount = tracks.length;
     const playtime = parseToHHMMSS(this.state.totalRuntime); 
   
+    console.log('PLAYLIST rendering from state: #',trackCount, 'tracks');
+
+    
+    
     const trackElements = tracksInOrder.map((track, i) => {
       return (
         <Track
@@ -153,6 +148,10 @@ class Playlist extends React.Component {
 Playlist.propTypes = {
   tracks: PropTypes.array,
   side: PropTypes.string,
+  totalRuntime: PropTypes.number,
+  trackIdsByOrder: PropTypes.array,
+  parentCB_Fav: PropTypes.func,
+  parentCB_Switch: PropTypes.func,
 }
 
 export default Playlist;

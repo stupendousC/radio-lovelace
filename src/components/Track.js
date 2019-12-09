@@ -79,11 +79,19 @@ const Track = ({parentCB_UpDown, parentCB_Switch, playlistName, parentCB_Fav, pa
 };
 
 Track.propTypes = {
+  id: PropTypes.number,
   title: PropTypes.string,
   artist: PropTypes.string,
   playtime: PropTypes.string,
   albumart: PropTypes.string,
   favorite: PropTypes.bool,
+  parentCB_UpDown: PropTypes.func, 
+  parentCB_Switch: PropTypes.func, 
+  playlistName: PropTypes.string, 
+  parentCB_Fav: PropTypes.func, 
+  parentCB_Order: PropTypes.func,
 }
+
+
 
 export default Track;

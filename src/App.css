@@ -8,3 +8,9 @@
   background-color: black;
   color: white;
 }
+
+.addNewPlaylist-fieldset {
+  background-color: pink;
+  margin: 0.5rem;
+  border: 0.1rem dotted red;
+}

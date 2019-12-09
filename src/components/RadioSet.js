@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import "./styles/RadioSet.css";
 import Playlist from './Playlist';
 import {capitalize, sortById} from './Helpers';
@@ -115,10 +116,6 @@ export default class RadioSet extends React.Component {
         updatedOldPlaylistInfo.playlists[name]= updatedOldPlaylist;
         updatedOldPlaylistInfo.playlistRuntimes[name]= updatedOldPlaylistRuntime;
         this.setState ({...updatedOldPlaylistInfo});
-
-        // console.log(`\nDOUBLE CHECK ON STATE, which should be set for OLDPLAYLIST both tracklist & runtime by now!!! `);
-        // console.log(this.state.playlists);
-        // console.log(this.state.playlistRuntimes);
         
         // Assign newPlaylistName depending on index position of oldPlaylistName
         if (i < allPlaylistEntries.length - 1) {
@@ -133,7 +130,6 @@ export default class RadioSet extends React.Component {
       } 
     }
     
-    
     // now ready to insert song into top of this current newPlaylist
     let updatedNewPlaylist = newPlaylist.slice();
     updatedNewPlaylist.unshift(song);
@@ -144,21 +140,8 @@ export default class RadioSet extends React.Component {
     updatedNewPlaylistInfo.playlists[newPlaylistName]= updatedNewPlaylist;
     updatedNewPlaylistInfo.playlistRuntimes[newPlaylistName]= updatedNewPlaylistRuntime;
     this.setState ({...updatedNewPlaylistInfo});
-
-    console.log(`\nDOUBLE CHECK ON STATE, which should be updated on both the oldPlaylist and newPlaylist now `);
-    console.log(this.state.playlists);
-    console.log(this.state.playlistRuntimes);
-
-
-
-
-
-
-
     }
   
-
-
   addNewPlaylist = () => {
     // TODO: trickle down from app.js, also need a button there.
 
@@ -171,16 +154,15 @@ export default class RadioSet extends React.Component {
   render() {
     const allPlaylistComponents = () => {
       const allPlaylistEntries = Object.entries(this.state.playlists);
-
-      console.log('RENDERING');
-      console.log(allPlaylistEntries);
-      console.log(Object.entries(this.state.playlistRuntimes));
       
       return allPlaylistEntries.map ((playlistState, i) => {
         const name = playlistState[0];
         const tracks = playlistState[1];
         const totalRuntime = Object.entries(this.state.playlistRuntimes)[i][1];
         
+        console.log('RadioSet sending...',tracks.length, 'runtime=', totalRuntime);
+        
+
         return (
               <Playlist 
                 key={i}
@@ -202,4 +184,10 @@ export default class RadioSet extends React.Component {
       </div>
     );
   }
+}
+
+
+RadioSet.propTypes = {
+  tracks: PropTypes.array,
+  parentCB_Fav: PropTypes.func,
 }

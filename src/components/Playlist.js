@@ -142,6 +142,10 @@ class Playlist extends React.Component {
 Playlist.propTypes = {
   tracks: PropTypes.array,
   side: PropTypes.string,
+  totalRuntime: PropTypes.number,
+  trackIdsByOrder: PropTypes.array,
+  parentCB_Fav: PropTypes.func,
+  parentCB_Switch: PropTypes.func,
 }
 
 export default Playlist;

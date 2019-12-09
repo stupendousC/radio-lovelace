@@ -56,6 +56,8 @@ class Playlist extends React.Component {
   playlistCB_Switch = (id, playlistName) => {
     // console.log(`passing it back up to Radioset! ${id} & ${playlistName}`);
     this.state.parentCB_Switch(id, playlistName);
+
+    
   }
 
   playlistCB_UpDown = (id, delta) => {
@@ -92,9 +94,12 @@ class Playlist extends React.Component {
     })
   }
 
-  render() {
+  render(props) {
     const tracks = this.state.tracks;
-    // const tracks = this.props.tracks;
+
+    // I did receive the correct props, but it's not automatically saved to the state here
+    console.log("Playlist RECEIVED", this.props.tracks.length);
+    
 
     // here we want tracks to appear in order per .state.trackIdsByOrder, instead of just the default ids
     const tracksInOrder = this.state.trackIdsByOrder.map ((id) => {
@@ -106,8 +111,9 @@ class Playlist extends React.Component {
     const trackCount = tracks.length;
     const playtime = parseToHHMMSS(this.state.totalRuntime); 
   
-    console.log(trackCount);
+    console.log('PLAYLIST rendering from state: #',trackCount, 'tracks');
 
+    
     
     const trackElements = tracksInOrder.map((track, i) => {
       return (

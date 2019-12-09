@@ -39,8 +39,8 @@ class App extends Component {
   }
 
   makeNewPlaylist = (event) => {
-    console.log(`Making new playlist called ${event.target}`);
-    // TODO
+    console.log(`Making new playlist called ${event.target.name}`);
+    return <RadioSet tracks={[]} />
   }
 
   render() {
@@ -55,13 +55,12 @@ class App extends Component {
           <form onSubmit={this.makeNewPlaylist}>
             <label>
               <h3>Add a new playlist</h3>
-              <input type="text" name="name" className="TODO"></input>
+              <input type="text" name="newPlaylistName"></input>
             </label>
             <input type="submit" value="Let's Rock!" />
           </form>
         </fieldset>
         
-
         <main className="main">
           <RadioSet 
             tracks={songData} 

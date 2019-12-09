@@ -109,8 +109,6 @@ export default class RadioSet extends React.Component {
         [song, updatedOldPlaylist] = this.removeSongFromList(id, copy_oldPlaylistTracks);
         const updatedOldPlaylistRuntime = this.updateListRuntime(oldPlaylistName, (-song.playtimeTotalSecs));
 
-        // console.log(`song is ${song.title}, runtime ${song.playtimeTotalSecs} oldPlaylist now has length ${updatedOldPlaylist.length} and new runtime ${updatedOldPlaylistRuntime}`);
-        
         // setState on oldList
         const updatedOldPlaylistInfo = {...this.state};
         updatedOldPlaylistInfo.playlists[name]= updatedOldPlaylist;
@@ -185,7 +183,6 @@ export default class RadioSet extends React.Component {
     );
   }
 }
-
 
 RadioSet.propTypes = {
   tracks: PropTypes.array,

@@ -19,7 +19,7 @@ export default class RadioSet extends React.Component {
         morning: firstCumulRuntime,
         evening: secondCumulRuntime,
       },
-      parentCB_Fav: props.parentCB_Fav,
+      // parentCB_Fav: props.parentCB_Fav,
     }
   }
 
@@ -64,6 +64,11 @@ export default class RadioSet extends React.Component {
   radioSetCB_Fav = (id, favorite) => {
     // console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
     this.state.parentCB_Fav(id, favorite);
+  }
+
+  radioSetCB_Top = (id, playlist) => {
+    console.log(`RadioSet received ${id} to send to TOP`);
+    
   }
 
   removeSongFromList = (id, copy_oldPlaylistTracks) => {
@@ -149,7 +154,7 @@ export default class RadioSet extends React.Component {
 
   }
 
-  render() {
+  render(props) {
     const allPlaylistComponents = () => {
       const allPlaylistEntries = Object.entries(this.state.playlists);
       
@@ -158,15 +163,15 @@ export default class RadioSet extends React.Component {
         const tracks = playlistState[1];
         const totalRuntime = Object.entries(this.state.playlistRuntimes)[i][1];
         
-        console.log('RadioSet sending...',tracks.length, 'runtime=', totalRuntime);
+        // console.log('RadioSet sending...',tracks.length, 'runtime=', totalRuntime);
         
-
         return (
               <Playlist 
                 key={i}
                 side={capitalize(name)}
                 tracks={tracks}
-                parentCB_Fav={this.radioSetCB_Fav}
+                parentCB_Fav={this.props.parentCB_Fav}
+                parentCB_Top={this.radioSetCB_Top}
                 parentCB_Switch={this.radioSetCB_Switch}
                 totalRuntime={totalRuntime}
               />

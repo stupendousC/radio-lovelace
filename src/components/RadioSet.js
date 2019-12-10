@@ -66,7 +66,7 @@ export default class RadioSet extends React.Component {
   }
 
   radioSetCB_Top = (id, playlistName) => {
-    console.log(`RadioSet received ${id} to send to TOP of ${playlistName}`);
+    // console.log(`RadioSet received ${id} to send to TOP of ${playlistName}`);
     const playlist = playlistName.toLowerCase();
 
     let updatedPlaylists = this.state.playlists;
@@ -75,6 +75,41 @@ export default class RadioSet extends React.Component {
     updatedPlaylists[playlist].unshift(newTopSong[0]);
 
     this.setState({ playlists: updatedPlaylists });
+  }
+
+  radioSetCB_UpDown = (id, delta, playlistName) => {
+    // console.log(`RadioSet received ${id} on ${playlistName}, move delta ${delta} spots`);
+    const playlist = playlistName.toLowerCase();
+    let updatedPlaylists = this.state.playlists;
+    let affectedPlaylist = updatedPlaylists[playlist];
+    
+    const currIndex = affectedPlaylist.findIndex( song => song.id === parseInt(id) );
+    
+    let newIndex;
+    if (delta === 1) {
+      if (currIndex === 0) {
+        // console.log("you're already at the top spot, done");
+        return;
+      } else {
+        newIndex = currIndex - 1;
+      }
+
+    } else if (delta === -1) {
+      if (currIndex === affectedPlaylist.length-1) {
+        // console.log("you're already at the bottom spot, done");
+        return;
+      } else {
+        newIndex = currIndex + 1;
+      }
+    }
+
+    const temp = affectedPlaylist[newIndex];
+    affectedPlaylist[newIndex] = affectedPlaylist[currIndex];
+    affectedPlaylist[currIndex] = temp;
+
+    this.setState({
+      playlists: updatedPlaylists,
+    })
   }
 
   removeSongFromList = (id, copy_oldPlaylistTracks) => {
@@ -178,6 +213,7 @@ export default class RadioSet extends React.Component {
                 tracks={tracks}
                 parentCB_Fav={this.props.parentCB_Fav}
                 parentCB_Top={this.radioSetCB_Top}
+                parentCB_UpDown={this.radioSetCB_UpDown}
                 parentCB_Switch={this.radioSetCB_Switch}
                 totalRuntime={totalRuntime}
               />

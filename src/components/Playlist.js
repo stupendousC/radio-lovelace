@@ -13,7 +13,6 @@ class Playlist extends React.Component {
       side: props.side,
       // tracks: props.tracks,
       // totalRuntime: props.totalRuntime,
-      parentCB_Top: props.parentCB_Top,
       parentCB_Switch: props.parentCB_Switch,
     }
   }
@@ -24,7 +23,7 @@ class Playlist extends React.Component {
   }
   
   playlistCB_Top = (id, playlistName) => {
-    console.log(`passing ${id} on ${playlistName} onto RadioSetCB_TOP`);
+    // console.log(`passing ${id} on ${playlistName} onto RadioSetCB_TOP`);
     this.props.parentCB_Top(id, playlistName);
   }
 
@@ -33,38 +32,9 @@ class Playlist extends React.Component {
     this.state.parentCB_Switch(id, playlistName);
   }
 
-  playlistCB_UpDown = (id, delta) => {
+  playlistCB_UpDown = (id, delta, playlistName) => {
     // console.log(`chosen song id=${id} to move by ${delta} positions`);
-    
-    const currTrackOrder = this.state.tracks.slice();
-    
-    const currIndex = currTrackOrder.findIndex( element => parseInt(element) === parseInt(id) );
-
-    let newIndex;
-    if (delta === 1) {
-      if (currIndex === 0) {
-        // console.log("you're already at the top spot, done");
-        return;
-      } else {
-        newIndex = currIndex - 1;
-      }
-
-    } else if (delta === -1) {
-      if (currIndex === currTrackOrder.length-1) {
-        // console.log("you're already at the bottom spot, done");
-        return;
-      } else {
-        newIndex = currIndex + 1;
-      }
-    }
-
-    const temp = currTrackOrder[newIndex];
-    currTrackOrder[newIndex] = currTrackOrder[currIndex];
-    currTrackOrder[currIndex] = temp;
-
-    this.setState({
-      tracks: currTrackOrder,
-    })
+    this.props.parentCB_UpDown(id, delta, playlistName);
   }
 
   render(props) {

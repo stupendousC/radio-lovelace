@@ -14,8 +14,8 @@ const Track = ({parentCB_UpDown, parentCB_Switch, playlistName, parentCB_Fav, pa
     parentCB_Fav(id, !favorite)
   }
 
-  const sendNewOrderUp = () => {
-    console.log(`\nEVENT TRIGGERED: New Top song = ${title} id=${id} list=${playlistName}`);
+  const sendNewTopUp = () => {
+    // console.log(`\nEVENT TRIGGERED: New Top song = ${title} id=${id} list=${playlistName}`);
     parentCB_Top(id, playlistName);
   }
 
@@ -26,12 +26,12 @@ const Track = ({parentCB_UpDown, parentCB_Switch, playlistName, parentCB_Fav, pa
 
   const moveUp1 = () => {
     // console.log(`\nEVENT TRIGGERED: Move up by 1 spot: ${title} id=${id}`);
-    parentCB_UpDown(id, 1);
+    parentCB_UpDown(id, 1, playlistName);
   }
 
   const moveDown1 = () => {
     // console.log(`\nEVENT TRIGGERED: Move down by 1 spot: ${title} id=${id}`);
-    parentCB_UpDown(id, -1);
+    parentCB_UpDown(id, -1, playlistName);
   }
 
   return (
@@ -63,7 +63,7 @@ const Track = ({parentCB_UpDown, parentCB_Switch, playlistName, parentCB_Fav, pa
 
       <button
         className="track--control track--to-top"
-        onClick={sendNewOrderUp}
+        onClick={sendNewTopUp}
         >
         <span role="img" aria-label="send to top">🔝</span>
       </button>

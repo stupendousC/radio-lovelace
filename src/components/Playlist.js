@@ -10,10 +10,9 @@ class Playlist extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // side: props.side,
+      side: props.side,
       // tracks: props.tracks,
       // totalRuntime: props.totalRuntime,
-      // parentCB_Fav: props.parentCB_Fav,
       parentCB_Top: props.parentCB_Top,
       parentCB_Switch: props.parentCB_Switch,
     }
@@ -24,9 +23,9 @@ class Playlist extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
   
-  playlistCB_Order = (id) => {
-    console.log(`passing ${id} onto RadioSetCB_TOP`);
-    this.state.parentCB_Top(id);
+  playlistCB_Top = (id, playlistName) => {
+    console.log(`passing ${id} on ${playlistName} onto RadioSetCB_TOP`);
+    this.props.parentCB_Top(id, playlistName);
   }
 
   playlistCB_Switch = (id, playlistName) => {
@@ -89,7 +88,7 @@ class Playlist extends React.Component {
           id={track.id}
           favorite={track.favorite}
           parentCB_Fav={this.props.parentCB_Fav}
-          parentCB_Order={this.playlistCB_Order}
+          parentCB_Top={this.playlistCB_Top}
           parentCB_Switch={this.playlistCB_Switch}
           parentCB_UpDown={this.playlistCB_UpDown}
           playlistName={this.state.side}

@@ -19,7 +19,6 @@ export default class RadioSet extends React.Component {
         morning: firstCumulRuntime,
         evening: secondCumulRuntime,
       },
-      // parentCB_Fav: props.parentCB_Fav,
     }
   }
 
@@ -66,9 +65,16 @@ export default class RadioSet extends React.Component {
     this.state.parentCB_Fav(id, favorite);
   }
 
-  radioSetCB_Top = (id, playlist) => {
-    console.log(`RadioSet received ${id} to send to TOP`);
-    
+  radioSetCB_Top = (id, playlistName) => {
+    console.log(`RadioSet received ${id} to send to TOP of ${playlistName}`);
+    const playlist = playlistName.toLowerCase();
+
+    let updatedPlaylists = this.state.playlists;
+    const currIndex = updatedPlaylists[playlist].findIndex( song => parseInt(song.id) === parseInt(id) );
+    const newTopSong = updatedPlaylists[playlist].splice(currIndex, 1);
+    updatedPlaylists[playlist].unshift(newTopSong[0]);
+
+    this.setState({ playlists: updatedPlaylists });
   }
 
   removeSongFromList = (id, copy_oldPlaylistTracks) => {

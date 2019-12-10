@@ -4,6 +4,7 @@ import './App.css';
 import RadioSet from './components/RadioSet';
 import songData from './data/tracks.json';
 import {parsePlaytime} from './components/Helpers';
+import { thisExpression } from '@babel/types';
 
 
 songData.forEach((song, i) => {
@@ -17,14 +18,14 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      songData: songData
+      songData: songData,
+      newPlaylistName: "",
     }
   }
 
   toggleFav = (id) => {
     // console.log( `App to .setState/toggle Fav on ${id});
 
-    // iter over songData, find matching id and change its newFav value
     const newSongData = this.state.songData;
     for (let song of newSongData) {
       if (song.id === id) {
@@ -33,14 +34,28 @@ class App extends Component {
       }
     };
     
-    this.setState({
-      songData: newSongData
-    })
+    this.setState({ songData: newSongData });
   }
 
-  makeNewPlaylist = (event) => {
-    console.log(`Making new playlist called ${event.target.name}`);
-    return <RadioSet tracks={[]} />
+  monitorNewPlaylistName = (event) => {
+    // save the state as user types in <input>, so onNewPlaylistSubmit() can send it out upon form submission
+    // console.log(`u typed ${event.target.value}, state is ${this.state.newPlaylistName}`);
+    this.setState({newPlaylistName: event.target.value});
+  }
+
+  onNewPlaylistSubmit = (event) => {
+    // MUST do this or page will reload, and lose all Single Page App data...
+    event.preventDefault();
+
+    console.log(`Making new playlist called ${this.state.newPlaylistName}`);
+    
+    // NOT SURE WHAT TO DO NOW... 
+
+
+
+
+
+    
   }
 
   render() {
@@ -51,11 +66,11 @@ class App extends Component {
         </header>
 
         <fieldset className="addNewPlaylist-fieldset">
-          <h1>This doesn't work yet.  Also, switchList button buggy</h1>
-          <form onSubmit={this.makeNewPlaylist}>
+          <h1>This doesn't work yet.</h1>
+          <form onSubmit={this.onNewPlaylistSubmit}>
             <label>
               <h3>Add a new playlist</h3>
-              <input type="text" name="newPlaylistName"></input>
+              <input type="text" value={this.state.newPlaylistName} onChange={this.monitorNewPlaylistName} name="newPlaylistName"></input>
             </label>
             <input type="submit" value="Let's Rock!" />
           </form>

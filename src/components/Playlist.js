@@ -1,3 +1,7 @@
+  // Playlist doesn't need to be a class anymore, but I don't feel like changing it right now, got other things to fix
+
+
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import './styles/Playlist.css';
@@ -7,19 +11,9 @@ import {parseToHHMMSS} from './Helpers';
 
 class Playlist extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      side: props.side,
-      // tracks: props.tracks,
-      // totalRuntime: props.totalRuntime,
-      parentCB_Switch: props.parentCB_Switch,
-    }
-  }
-
   playlistCB_Fav = (id, favorite) => {
     // console.log(`playlistCB -> RadioSet... toggle on ${id} newFav=${favorite}`);
-    this.state.parentCB_Fav(id, favorite);
+    this.props.parentCB_Fav(id, favorite);
   }
   
   playlistCB_Top = (id, playlistName) => {
@@ -29,7 +23,7 @@ class Playlist extends React.Component {
 
   playlistCB_Switch = (id, playlistName) => {
     // console.log(`passing it back up to Radioset! ${id} & ${playlistName}`);
-    this.state.parentCB_Switch(id, playlistName);
+    this.props.parentCB_Switch(id, playlistName);
   }
 
   playlistCB_UpDown = (id, delta, playlistName) => {
@@ -37,19 +31,12 @@ class Playlist extends React.Component {
     this.props.parentCB_UpDown(id, delta, playlistName);
   }
 
-  render(props) {
+  render() {
     const tracks = this.props.tracks;
-
-    // I did receive the correct props, but it's not automatically saved to the state here
-    console.log("Playlist RECEIVED", this.props.tracks.length);
 
     const trackCount = tracks.length;
     const playtime = parseToHHMMSS(this.props.totalRuntime); 
   
-    console.log('PLAYLIST rendering from state: #',trackCount, 'tracks');
-
-    
-    
     const trackElements = tracks.map((track, i) => {
       return (
         <Track
@@ -61,14 +48,14 @@ class Playlist extends React.Component {
           parentCB_Top={this.playlistCB_Top}
           parentCB_Switch={this.playlistCB_Switch}
           parentCB_UpDown={this.playlistCB_UpDown}
-          playlistName={this.state.side}
+          playlistName={this.props.side}
         />
       );
     });
 
     return (
       <div className="playlist">
-        <h2>{this.state.side} Playlist</h2>
+        <h2>{this.props.side} Playlist</h2>
         <p>
           {trackCount} tracks - {playtime}
         </p>
@@ -84,10 +71,10 @@ Playlist.propTypes = {
   tracks: PropTypes.array,
   side: PropTypes.string,
   totalRuntime: PropTypes.number,
-  trackIdsByOrder: PropTypes.array,
   parentCB_Fav: PropTypes.func,
   parentCB_Top: PropTypes.func,
   parentCB_Switch: PropTypes.func,
+  parentCB_UpDown: PropTypes.func,
 }
 
 export default Playlist;

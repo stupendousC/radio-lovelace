@@ -62,7 +62,7 @@ export default class RadioSet extends React.Component {
 
   radioSetCB_Fav = (id, favorite) => {
     // console.log( `RadioSet -> App... toggle on ${id} newFav = ${favorite}`);
-    this.state.parentCB_Fav(id, favorite);
+    this.props.parentCB_Fav(id, favorite);
   }
 
   radioSetCB_Top = (id, playlistName) => {
@@ -113,6 +113,7 @@ export default class RadioSet extends React.Component {
   }
 
   removeSongFromList = (id, copy_oldPlaylistTracks) => {
+    // HELPER FCN
     // remove song matching id from oldPlaylistTracks
     // return that song object with the updated oldPlaylistTracks array
       let song;
@@ -125,6 +126,7 @@ export default class RadioSet extends React.Component {
   }
   
   updateListRuntime = (affectedPlaylistName, deltaTimeInSecs) => {
+    // HELPER FCN
     // if removing song, deltaTimeInSecs will be negative.  Otherwise it's positive for adding a song.
     const currPlaylistRuntime = this.state.playlistRuntimes[affectedPlaylistName];
     const updatedRuntime = currPlaylistRuntime + deltaTimeInSecs;
@@ -187,7 +189,7 @@ export default class RadioSet extends React.Component {
     }
   
   addNewPlaylist = () => {
-    // TODO: trickle down from app.js, also need a button there.
+    // TODO?????: trickle down from app.js
 
 
 
@@ -195,7 +197,7 @@ export default class RadioSet extends React.Component {
 
   }
 
-  render(props) {
+  render() {
     const allPlaylistComponents = () => {
       const allPlaylistEntries = Object.entries(this.state.playlists);
       
@@ -203,8 +205,6 @@ export default class RadioSet extends React.Component {
         const name = playlistState[0];
         const tracks = playlistState[1];
         const totalRuntime = Object.entries(this.state.playlistRuntimes)[i][1];
-        
-        // console.log('RadioSet sending...',tracks.length, 'runtime=', totalRuntime);
         
         return (
               <Playlist 
